@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- What the page may load: its own files and Google Fonts, nothing else.
+       The waitlist form posts with fetch, so the address it posts to must be
+       added to connect-src and form-action here when it is connected. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; media-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'self'; object-src 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>Ilumi | An AI tutor for reading, writing, and math</title>
+  <meta name="description" content="When your child gets stuck, Ilumi knows why. An AI tutor for reading, writing, and math. Ages 4 to 8, on iPad.">
+  <link rel="canonical" href="https://heyilumi.com/">
+  <meta name="application-name" content="Ilumi">
+  <meta property="og:title" content="Ilumi | An AI tutor for reading, writing, and math">
+  <meta property="og:description" content="When your child gets stuck, Ilumi knows why. An AI tutor for reading, writing, and math. Ages 4 to 8, on iPad.">
+  <meta property="og:url" content="https://heyilumi.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Ilumi">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preload" as="image" href="assets/hero-bg.jpg" fetchpriority="high">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Geist:wght@400..700&family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400..500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<!-- The Ilumi wordmark, inlined so it never depends on loading a file
+     (assets/source/ilumi-A-spark-black.svg, EB Garamond 500 units, baseline at 0).
+     Drawn with <use> by .wordmark in the scroll text; see css/styles.css.
+     Two paths: the letters, and the spark over the i (.wordmark-spark, gold). -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><g id="ilumi-wordmark-glyphs"><path d="M44 4Q33 4 25.5 1.5Q18 -1 18 -8Q18 -21 47 -27Q85 -34 103.0 -49.0Q121 -64 121 -98V-550Q121 -584 107.0 -598.5Q93 -613 55 -621Q26 -627 26 -641Q26 -648 33.0 -651.0Q40 -654 51 -654Q77 -654 97.5 -653.0Q118 -652 137.0 -651.0Q156 -650 178 -650Q199 -650 217.5 -650.5Q236 -651 255.5 -652.0Q275 -653 300 -653Q312 -653 319.0 -650.5Q326 -648 326 -641Q326 -633 318.5 -628.5Q311 -624 297 -621Q258 -612 242.5 -598.0Q227 -584 227 -550V-98Q227 -65 246.0 -50.0Q265 -35 302 -27Q317 -24 324.0 -20.0Q331 -16 331 -8Q331 -2 324.5 1.0Q318 4 306 4Q281 4 260.0 2.5Q239 1 219.5 0.0Q200 -1 178 -1Q154 -1 133.5 0.0Q113 1 91.0 2.5Q69 4 44 4Z M386 3Q379 3 372.5 1.0Q366 -1 366 -8Q366 -16 373.0 -19.5Q380 -23 389 -27Q404 -32 417.0 -38.0Q430 -44 430 -65V-560Q430 -589 420.5 -608.5Q411 -628 386 -633Q378 -635 378 -647Q378 -658 385 -660Q411 -665 434.0 -673.0Q457 -681 477.0 -689.0Q497 -697 513 -703Q519 -705 522 -705Q525 -705 526.5 -702.0Q528 -699 528 -696Q528 -688 525.0 -662.0Q522 -636 522 -584V-65Q522 -45 535.0 -38.5Q548 -32 563 -27Q572 -24 579.0 -20.0Q586 -16 586 -8Q586 -2 579.5 0.0Q573 2 566 2Q547 2 533.0 1.0Q519 0 506.0 -1.0Q493 -2 475 -2Q458 -2 445.0 -1.0Q432 0 419.0 1.5Q406 3 386 3Z M960 20Q952 20 952 11Q952 0 954.5 -19.5Q957 -39 957 -51Q957 -54 957.0 -56.0Q957 -58 957 -59Q922 -23 881.5 -4.5Q841 14 794 14Q763 14 737.0 -1.0Q711 -16 696.5 -44.5Q682 -73 682 -112V-310Q682 -332 672.5 -345.5Q663 -359 640 -366Q635 -368 630.5 -371.5Q626 -375 626 -383Q626 -392 630.5 -395.5Q635 -399 641 -400Q678 -402 702.0 -406.5Q726 -411 756 -419Q760 -420 763.0 -420.5Q766 -421 769 -421Q781 -421 780 -407Q777 -384 775.0 -368.5Q773 -353 773 -330V-136Q773 -112 783.5 -92.5Q794 -73 812.0 -61.0Q830 -49 849 -48Q872 -48 890.0 -51.5Q908 -55 925 -69Q934 -76 947.5 -93.0Q961 -110 961 -140V-315Q961 -335 950.5 -345.5Q940 -356 925.5 -361.0Q911 -366 899 -367Q889 -367 883.0 -371.0Q877 -375 877 -385Q877 -395 883.5 -398.5Q890 -402 899 -402Q937 -404 960.5 -406.0Q984 -408 1001.5 -411.0Q1019 -414 1038 -419Q1040 -420 1043.5 -420.5Q1047 -421 1049 -421Q1062 -421 1062 -410Q1062 -408 1061.5 -405.0Q1061 -402 1060 -399Q1059 -395 1057.5 -381.5Q1056 -368 1054.5 -353.0Q1053 -338 1053 -329V-98Q1053 -73 1058.5 -62.5Q1064 -52 1071 -52Q1078 -52 1091.5 -53.0Q1105 -54 1111 -54Q1117 -54 1122.0 -51.0Q1127 -48 1127 -39Q1127 -31 1123.0 -27.5Q1119 -24 1112 -23Q1070 -18 1038.0 -7.0Q1006 4 982 13Q978 15 971.5 17.5Q965 20 960 20Z M1179 3Q1171 3 1165.0 0.5Q1159 -2 1159 -9Q1159 -16 1165.5 -20.0Q1172 -24 1182 -27Q1196 -32 1209.5 -38.5Q1223 -45 1223 -65V-285Q1223 -310 1217.0 -328.5Q1211 -347 1188 -351Q1184 -352 1181.0 -355.0Q1178 -358 1178 -365Q1178 -377 1187 -379Q1213 -386 1233.0 -394.0Q1253 -402 1270.0 -411.5Q1287 -421 1306 -432Q1308 -433 1310.5 -434.5Q1313 -436 1316 -436Q1323 -436 1323 -428Q1323 -420 1320.5 -399.5Q1318 -379 1318 -365Q1318 -355 1320 -353H1322Q1347 -378 1384.5 -399.0Q1422 -420 1475 -420Q1509 -420 1534.0 -402.5Q1559 -385 1574 -348H1577Q1608 -380 1648.0 -400.0Q1688 -420 1736 -420Q1769 -420 1792.0 -401.0Q1815 -382 1827.5 -350.0Q1840 -318 1840 -280V-64Q1840 -44 1853.0 -38.0Q1866 -32 1881 -27Q1891 -24 1897.0 -20.0Q1903 -16 1903 -9Q1903 -3 1898.5 0.0Q1894 3 1884 3Q1864 3 1851.0 1.5Q1838 0 1826.0 -1.0Q1814 -2 1796 -2Q1779 -2 1766.5 -1.0Q1754 0 1741.0 1.5Q1728 3 1708 3Q1700 3 1694.5 0.0Q1689 -3 1689 -9Q1689 -17 1695.0 -20.5Q1701 -24 1711 -27Q1726 -31 1737.0 -37.5Q1748 -44 1748 -62V-271Q1748 -295 1738.5 -315.5Q1729 -336 1713.0 -348.5Q1697 -361 1677 -361Q1656 -361 1637.0 -355.0Q1618 -349 1600 -335Q1577 -317 1577 -274V-64Q1577 -44 1589.5 -37.5Q1602 -31 1617 -27Q1626 -24 1632.5 -20.0Q1639 -16 1639 -9Q1639 -3 1634.0 0.0Q1629 3 1620 3Q1600 3 1587.0 1.5Q1574 0 1562.0 -1.0Q1550 -2 1532 -2Q1515 -2 1502.5 -1.0Q1490 0 1477.0 1.5Q1464 3 1444 3Q1437 3 1431.0 0.0Q1425 -3 1425 -9Q1425 -17 1432.0 -20.5Q1439 -24 1447 -27Q1462 -31 1473.5 -37.5Q1485 -44 1485 -62V-271Q1485 -295 1475.5 -315.0Q1466 -335 1450.0 -348.0Q1434 -361 1414 -361Q1394 -361 1374.5 -355.0Q1355 -349 1337 -335Q1315 -319 1315 -275V-64Q1315 -45 1326.0 -38.5Q1337 -32 1352 -27Q1360 -24 1367.0 -20.5Q1374 -17 1374 -9Q1374 -3 1368.5 0.0Q1363 3 1355 3Q1335 3 1322.0 1.5Q1309 0 1298.0 -1.0Q1287 -2 1269 -2Q1252 -2 1239.0 -1.0Q1226 0 1212.5 1.5Q1199 3 1179 3Z M1966 3Q1958 3 1952.5 0.0Q1947 -3 1947 -9Q1947 -17 1953.5 -20.5Q1960 -24 1968 -26Q1991 -32 2002.0 -39.0Q2013 -46 2013 -64V-280Q2013 -310 2003.0 -328.5Q1993 -347 1968 -351Q1963 -352 1960.5 -355.5Q1958 -359 1958 -366Q1958 -378 1967 -379Q2011 -389 2042.5 -405.5Q2074 -422 2090 -432Q2101 -439 2106 -439Q2114 -439 2114 -431Q2114 -420 2111.5 -396.0Q2109 -372 2106.5 -344.0Q2104 -316 2104 -292V-64Q2104 -48 2115.0 -40.0Q2126 -32 2149 -26Q2157 -24 2163.5 -20.5Q2170 -17 2170 -9Q2170 3 2152 3Q2133 3 2118.0 1.5Q2103 0 2089.5 -1.0Q2076 -2 2058 -2Q2041 -2 2027.0 -1.0Q2013 0 1999.5 1.5Q1986 3 1966 3Z"/><path class="wordmark-spark" d="M2057.0 -789.3 Q2035.6 -677.0 1958.1 -655.6 Q2035.6 -634.3 2057.0 -522.0 Q2078.4 -634.3 2155.9 -655.6 Q2078.4 -677.0 2057.0 -789.3Z"/></g></defs></svg>
+<!-- ===================== HEADER ===================== -->
+<!-- One fixed header. Over the hero and its scroll story it is a clear,
+     full-width bar; when the white guides section arrives under it, it closes
+     into a floating glass pill. "Questions" and "Join the waitlist" do not
+     scroll: the page goes straight to the section and its content fades in
+     (initJumps in js/main.js). Under 1200px it is a pill with the logo and a
+     menu button, and the links live in the full-screen drawer. Sizes and timings are at .site-header in
+     css/styles.css; the switch point and the menu are initNav in js/main.js. -->
+<header class="site-header" id="site-header">
+  <div class="nav-row">
+    <span class="nav-glass nav-surface" aria-hidden="true"></span>
+
+    <div class="nav-logo">
+      <a aria-label="Ilumi" class="logo-link" href="index.html"><img src="assets/ilumi-logo.png" alt="Ilumi" width="140" height="122"></a>
+    </div>
+
+    <nav class="nav-links" aria-label="Main">
+      <a class="nav-link" href="how-it-works.html">How it works</a>
+      <a class="nav-link" href="#faq">Questions</a>
+      <a class="nav-link" href="contact.html" data-contact>Contact us</a>
+    </nav>
+
+    <div class="nav-actions">
+      <!-- On hover the label rolls up to its copy and a second arrow slides in. -->
+      <a href="#waitlist" class="btn-ink nav-cta">
+        <span class="roll"><span class="roll-track"><span>Join the waitlist</span><span aria-hidden="true">Join the waitlist</span></span></span>
+        <span class="roll-arrow" aria-hidden="true"><span class="roll-arrow-track"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span></span>
+      </a>
+      <button type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-drawer" class="glass-chip menu-btn">
+        <svg class="menu-icon-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        <svg class="menu-icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Full-screen menu for narrower screens; the row above stays on top of it. -->
+  <div class="vellum-field nav-drawer" id="nav-drawer">
+    <div class="nav-drawer-inner">
+      <nav class="nav-drawer-links" aria-label="Menu">
+        <a href="how-it-works.html">How it works</a>
+        <a href="#faq">Questions</a>
+        <a href="contact.html" data-contact>Contact us</a>
+      </nav>
+      <div class="nav-drawer-cta">
+        <a href="#waitlist" class="btn-ink">Join the waitlist<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- The firefly: the wordmark's spark (the second path of
+     #ilumi-wordmark-glyphs), flying free of the word while the hero is pinned:
+     it circles the word, drops onto its i, and fades out as the page moves on
+     to the guides section. It is fixed over the page so the guides section,
+     which scrolls up over the hero, does not cover it. Its path and the
+     threads of light behind it are FIREFLY in js/main.js; its look is .firefly
+     in css/styles.css. -->
+<div class="firefly" aria-hidden="true">
+  <svg class="firefly-trail" focusable="false"><path pathLength="1" fill="none"/><path pathLength="1" fill="none"/></svg>
+  <span class="firefly-fly"><span class="firefly-body">
+    <span class="firefly-glow"></span>
+    <svg class="firefly-star" viewBox="1958.1 -789.3 197.8 267.3" focusable="false"><path d="M2057.0 -789.3 Q2035.6 -677.0 1958.1 -655.6 Q2035.6 -634.3 2057.0 -522.0 Q2078.4 -634.3 2155.9 -655.6 Q2078.4 -677.0 2057.0 -789.3Z"/></svg>
+  </span></span>
+</div>
+
+<main>
+  <div class="vellum-field">
+
+    <!-- ===================== HERO SEQUENCE ===================== -->
+    <!-- The hero pins while you scroll: its copy fades, the art zooms in a little,
+         then the sentences below unfurl letter by letter, one panel at a time. The
+         spark of the wordmark flies loose as a firefly (.firefly, above), loops
+         the word and drops onto its i; then the page moves on to the guides
+         section and it fades out (js/main.js). -->
+    <div class="hero-sequence" id="hero-sequence">
+      <div class="hero-stage">
+        <div class="hero-scene">
+
+        <section class="hero">
+          <div aria-hidden="true" class="hero-bg">
+            <img src="assets/hero-bg.jpg" alt="" fetchpriority="high" draggable="false">
+            <div class="hero-art-fade"></div>
+          </div>
+
+          <div class="hero-content">
+            <div class="hero-type reveal">
+              <div class="hero-title-block">
+                <a class="glass-chip hero-badge" href="#waitlist"><span class="hero-badge-dot" aria-hidden="true"></span>Now inviting founding families</a>
+                <h1 class="hero-headline"><span class="line">When your child gets stuck,</span><span class="line">Ilumi knows <em class="accent">why</em>.</span></h1>
+                <p class="hero-subtitle">An AI tutor for reading, writing, and math. Ages 4 to 8, on iPad.</p>
+              </div>
+            </div>
+
+            <div class="url-wrap reveal reveal-delay">
+              <div class="url-stack">
+                <a class="url-btn waitlist-btn" href="#waitlist"><span>Join the waitlist</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="manifesto" id="manifesto">
+          <div class="manifesto-panel">
+            <p class="manifesto-line">Most learning apps remember your child’s score.</p>
+            <p class="manifesto-line">A great teacher remembers your child.</p>
+          </div>
+          <div class="manifesto-panel">
+            <p class="manifesto-line">We’re building <svg class="wordmark" viewBox="0 -790 2187.71 810" role="img" aria-label="Ilumi"><use href="#ilumi-wordmark-glyphs"/></svg>, a tutor that remembers<br>how your child reads, writes, and counts.</p>
+          </div>
+        </div>
+
+        <!-- Laid over the painting and the sentence, faded in as the page moves
+             on to the guides section: white, as that section is, or its first
+             painting when the section is set to data-ground="world". -->
+        <span class="hero-wash" aria-hidden="true"></span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===================== ONE WORLD, THREE GUIDES ===================== -->
+  <!-- On wide screens this pins while you scroll: scrolling moves from one guide
+       to the next, and each guide's scene on the right plays its screen from the
+       app. Narrower, without JS or with reduced motion it is three plain rows.
+       Scroll distances and the three scenes' timelines are in js/main.js (GUIDES).
+
+       data-ground="world" is a trial: the section stands on paintings that fill
+       the whole window (.guides-grounds, one per guide, cross-fading as the
+       guide changes) and the hero fades into the first of them, not to white.
+       Delete the attribute and the section is the white one again; nothing
+       else needs to change. See "The guides section" in README.md. -->
+  <section class="guides" id="guides" aria-labelledby="guides-title" data-ground="world">
+    <div class="guides-stage">
+      <!-- The paintings behind the section (data-ground="world" only; hidden
+           otherwise). In the order of the guides below. -->
+      <div class="guides-grounds" aria-hidden="true">
+        <!-- Reading's painting carries the lantern the child lights: the lit
+             lantern, and the flash of light as it catches (readingScene in main.js). -->
+        <span class="guides-ground guides-ground-reading is-on">
+          <span class="guides-lit"></span>
+          <span class="guides-bloom"></span>
+        </span>
+        <span class="guides-ground guides-ground-writing"></span>
+        <span class="guides-ground guides-ground-math"></span>
+      </div>
+      <div class="guides-inner">
+
+        <div class="guides-head">
+          <h2 class="guides-title" id="guides-title">One world. <br>Three guides.</h2>
+          <p class="guides-lede">
+            <span>A world that grows as your child does.</span>
+            <span>Every word, letter, and number opens more of it.</span>
+          </p>
+        </div>
+
+        <!-- Reading: a page of the story, at camp at night. The rabbit tells the
+             story; one line is the child's. They read it aloud, word by word, and
+             what it says happens: a lantern lights in the Big Tree. -->
+        <article class="guide guide-reading is-active" data-guide="reading">
+          <div class="guide-step">
+            <h3 class="guide-heading">
+              <button type="button" class="guide-tab">
+                <span class="guide-icon">
+                  <svg class="guide-ring" viewBox="0 0 48 48" aria-hidden="true"><circle class="guide-ring-track" cx="24" cy="24" r="22.75"></circle><circle class="guide-ring-fill" cx="24" cy="24" r="22.75" pathLength="1"></circle></svg>
+                  <img src="assets/guides/avatar-rabbit.webp" alt="" width="40" height="40" loading="lazy">
+                </span>
+                <span class="guide-name">Reading, with the rabbit</span>
+              </button>
+            </h3>
+            <div class="guide-body"><div><p>The rabbit tells the story, and your child reads the line that makes it happen. A word that won’t come, they read together.</p></div></div>
+          </div>
+          <div class="guide-visual" role="img" aria-label="A page of the story, at camp at night. The rabbit says: night has come to camp, and it’s getting dark. Let’s light our lamp. One line is for the child to read aloud: the lamp is lit. As they read it, word by word, a lantern lights in the tree, and the rabbit says: there it is. Now our camp is warm and bright. Beside the line, a small round video of a child reading it, who looks up and smiles as the lantern lights.">
+            <img class="guide-scene" src="assets/guides/scene-camp-night.webp" alt="" width="1400" height="933" loading="lazy" draggable="false">
+            <img class="guide-scene guide-scene-lit" src="assets/guides/ground-camp-lantern.webp" alt="" width="1536" height="1024" loading="lazy" draggable="false">
+            <img class="guide-scene guide-scene-bloom" src="assets/guides/lantern-bloom.svg" alt="" width="1536" height="1024" loading="lazy" draggable="false">
+            <div class="guide-story">
+              <div class="mock mock-reading">
+                <p class="mock-says mock-caption-swap">
+                  <span class="mock-tell">Night has come to camp, and it’s getting dark. Let’s light our lamp.</span>
+                  <span class="mock-reply">There it is. Now our camp is warm and bright.</span>
+                </p>
+                <div class="mock-turn">
+                  <span class="mock-turn-label"><span class="mock-ear"></span>Your child reads aloud</span>
+                  <p class="mock-line"><span class="mock-word is-read" data-w="The">The</span> <span class="mock-word is-read" data-w="lamp">lamp</span> <span class="mock-word is-read" data-w="is">is</span> <span class="mock-word is-read" data-w="lit.">lit.</span></p>
+                  <!-- The child whose line it is, in a round picture off the
+                       strip's lower right corner. The poster is the still; the
+                       clip plays in step with the scene (readingScene in main.js). -->
+                  <span class="mock-child">
+                    <video src="assets/guides/child-reading.mp4" poster="assets/guides/child-reading.jpg" width="528" height="528" muted playsinline preload="metadata" disablepictureinpicture disableremoteplayback tabindex="-1" aria-hidden="true"></video>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <img class="guide-figure" src="assets/guides/rabbit.webp" alt="" width="345" height="640" loading="lazy" draggable="false">
+          </div>
+        </article>
+
+        <!-- Writing: a callback. The swallow remembers what the child said
+             (fly, not swim) and asks for one word on a blank pad, no model to
+             trace. The child writes it, taps Done, and the swallow answers.
+             Nothing flies and the swallow stays still. -->
+        <article class="guide guide-writing" data-guide="writing">
+          <div class="guide-step">
+            <h3 class="guide-heading">
+              <button type="button" class="guide-tab">
+                <span class="guide-icon">
+                  <svg class="guide-ring" viewBox="0 0 48 48" aria-hidden="true"><circle class="guide-ring-track" cx="24" cy="24" r="22.75"></circle><circle class="guide-ring-fill" cx="24" cy="24" r="22.75" pathLength="1"></circle></svg>
+                  <img src="assets/guides/avatar-swallow.webp" alt="" width="40" height="40" loading="lazy">
+                </span>
+                <span class="guide-name">Writing, with the swallow</span>
+              </button>
+            </h3>
+            <div class="guide-body"><div><p>The swallow remembers what your child tells it, and gives them a reason to write. No tracing over dotted lines.</p></div></div>
+          </div>
+          <div class="guide-visual" role="img" aria-label="The writing screen. The swallow says: remember when you said you’d rather fly than swim? Me too. Write up. The child writes the word up on a blank pad, and the swallow says: up it is.">
+            <img class="guide-scene" src="assets/guides/scene-stream.webp" alt="" width="1400" height="933" loading="lazy" draggable="false">
+            <div class="guide-card">
+              <div class="mock mock-writing">
+                <p class="mock-caption mock-caption-swap">
+                  <span class="mock-ask">Remember when you said you’d rather fly than swim? Me too. Write <b class="mock-target">up</b>.</span>
+                  <span class="mock-beat">Up it is.</span>
+                </p>
+                <svg class="mock-pad" viewBox="0 0 320 240" aria-hidden="true">
+                  <rect class="mock-pad-frame" x="1.5" y="1.5" width="317" height="237" rx="16"></rect>
+                  <!-- The child's word: a u in one stroke, a p in two. -->
+                  <g class="mock-written">
+                    <path class="mock-stroke" pathLength="1" d="M97 84 C95 112 93 150 119 151 C140 152 144 120 144 86 C144 112 145 136 149 152"></path>
+                    <path class="mock-stroke" pathLength="1" d="M182 86 C182 122 183 164 185 200"></path>
+                    <path class="mock-stroke" pathLength="1" d="M183 100 C196 80 229 86 228 118 C227 147 199 156 184 139"></path>
+                  </g>
+                </svg>
+                <span class="mock-btn">Done</span>
+              </div>
+            </div>
+            <img class="guide-figure" src="assets/guides/swallow.webp" alt="" width="488" height="640" loading="lazy" draggable="false">
+          </div>
+        </article>
+
+        <!-- Math: the make-five item, on a card. Three acorns are in the tray
+             and it needs five; the child slides two more in from the pile and
+             taps Go, leaving two behind. Then the note the parent gets: how
+             the child got there, not a score. Places on the bench are in its
+             own units (100 wide, 66 tall): --x is an acorn's middle, --y its
+             foot. -->
+        <article class="guide guide-math" data-guide="math">
+          <div class="guide-step">
+            <h3 class="guide-heading">
+              <button type="button" class="guide-tab">
+                <span class="guide-icon">
+                  <svg class="guide-ring" viewBox="0 0 48 48" aria-hidden="true"><circle class="guide-ring-track" cx="24" cy="24" r="22.75"></circle><circle class="guide-ring-fill" cx="24" cy="24" r="22.75" pathLength="1"></circle></svg>
+                  <img src="assets/guides/avatar-squirrel.webp" alt="" width="40" height="40" loading="lazy">
+                </span>
+                <span class="guide-name">Math, with the squirrel</span>
+              </button>
+            </h3>
+            <div class="guide-body"><div><p>Your child solves small story problems by moving things, never multiple choice. Ilumi notices how they got there, and tells you.</p></div></div>
+          </div>
+          <div class="guide-visual" role="img" aria-label="The math screen. The squirrel says: three in the basket. I need five for winter. Three acorns sit in a tray and four more wait below it. The child slides two of them in, counting four, five, leaves the other two and taps Go. The squirrel says: five. That’s the lot. Then a note for the parent appears: Leo counted on from three today. Last month he started from one.">
+            <img class="guide-scene" src="assets/guides/scene-glade.webp" alt="" width="1400" height="933" loading="lazy" draggable="false">
+            <div class="guide-card">
+              <div class="mock mock-math">
+                <p class="mock-caption mock-caption-swap">
+                  <span class="mock-ask">Three in the basket. I need five for winter.</span>
+                  <span class="mock-beat">Five. That’s the lot.</span>
+                </p>
+                <div class="mock-bench">
+                  <span class="mock-tray"></span>
+                  <span class="mock-count" style="--x: 66; --y: 8.5">four</span>
+                  <span class="mock-count" style="--x: 82; --y: 8.5">five</span>
+                  <!-- The three that are already in. -->
+                  <span class="mock-acorn" style="--x: 18; --y: 32"><img src="assets/guides/acorn-1.webp" alt="" width="181" height="260" loading="lazy" draggable="false"></span>
+                  <span class="mock-acorn" style="--x: 34; --y: 32"><img src="assets/guides/acorn-3.webp" alt="" width="187" height="260" loading="lazy" draggable="false"></span>
+                  <span class="mock-acorn" style="--x: 50; --y: 32"><img src="assets/guides/acorn-2.webp" alt="" width="202" height="260" loading="lazy" draggable="false"></span>
+                  <!-- The two left in the pile. -->
+                  <span class="mock-acorn" style="--x: 26; --y: 63"><img src="assets/guides/acorn-2.webp" alt="" width="202" height="260" loading="lazy" draggable="false"></span>
+                  <span class="mock-acorn" style="--x: 42; --y: 63"><img src="assets/guides/acorn-3.webp" alt="" width="187" height="260" loading="lazy" draggable="false"></span>
+                  <!-- The two the child slides in. They stand where they land;
+                       data-dx and data-dy are how far back, in the bench's
+                       units, to the place in the pile they start from. -->
+                  <span class="mock-tap" style="--x: 58; --y: 54"></span>
+                  <span class="mock-tap" style="--x: 74; --y: 54"></span>
+                  <span class="mock-acorn mock-acorn-move" style="--x: 66; --y: 32" data-dx="-8" data-dy="31"><img src="assets/guides/acorn-4.webp" alt="" width="202" height="260" loading="lazy" draggable="false"></span>
+                  <span class="mock-acorn mock-acorn-move" style="--x: 82; --y: 32" data-dx="-8" data-dy="31"><img src="assets/guides/acorn-1.webp" alt="" width="181" height="260" loading="lazy" draggable="false"></span>
+                </div>
+                <!-- Go, and then in its place the note the parent gets. -->
+                <div class="mock-after">
+                  <span class="mock-btn">Go</span>
+                  <div class="mock-note">
+                    <span class="mock-note-label">Tonight’s note to you</span>
+                    <p>Leo counted on from three today. Last month he started from one.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <img class="guide-figure" src="assets/guides/squirrel.webp" alt="" width="362" height="640" loading="lazy" draggable="false">
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ALIGNED TO THE CURRICULUM ===================== -->
+  <!-- A sheet of the app's paper that comes up over the last painting. One
+       visual with no frame: the path a parent sees in the app (a dot for each
+       step, the grades the work sits in over it), the wordmark's spark
+       lighting the steps one by one, and the slip that says what the current
+       step is and which standard it covers. The two switches are real: reading,
+       writing or math, and which curriculum the codes are cited from. Until someone
+       touches a switch the scene plays them all by itself (initStandards in
+       js/main.js).
+
+       What is written here is the finished still: reading, the eighth step,
+       cited from the Common Core. That is what shows without JS or with
+       reduced motion. The switches are disabled until main.js takes them over.
+
+       Every label, grade and code comes from the app repo: the crosswalk
+       (docs/STANDARDS_CROSSWALK.md) and BANDS.md. Change one only from there.
+       .is-soon on a step or a bracket styles nothing; what it records, and
+       where the spark may stop, is in "The curriculum section" in README.md.
+
+       A grade's name can differ by curriculum (Ontario says JK and SK where
+       the US says Pre-K and K): .cur-us and .cur-on hold the two, and the
+       section's data-curriculum picks one.
+       See "The curriculum section" in README.md. -->
+  <section class="standards" id="curriculum" aria-labelledby="standards-title" data-subject="reading" data-curriculum="us">
+    <div class="standards-inner" data-fade="out" data-fade-out="1 0.3">
+
+      <div class="standards-head">
+        <h2 class="standards-title" id="standards-title">Aligned to what your child’s school is teaching.</h2>
+        <p class="standards-lede">
+          <span>Ilumi’s steps map to the Ontario curriculum and the US Common Core,</span>
+          <span>so every session at home is practice for the work they do in class.</span>
+        </p>
+      </div>
+
+      <div class="standards-visual">
+        <div class="standards-bar">
+          <div class="seg seg-subject" role="group" aria-label="Subject">
+            <span class="seg-thumb" aria-hidden="true"></span>
+            <button type="button" class="seg-btn" data-subject="reading" aria-pressed="true" disabled><img src="assets/guides/avatar-rabbit.webp" alt="" width="40" height="40" loading="lazy">Reading</button>
+            <button type="button" class="seg-btn" data-subject="writing" aria-pressed="false" disabled><img src="assets/guides/avatar-swallow.webp" alt="" width="40" height="40" loading="lazy">Writing</button>
+            <button type="button" class="seg-btn" data-subject="math" aria-pressed="false" disabled><img src="assets/guides/avatar-squirrel.webp" alt="" width="40" height="40" loading="lazy">Math</button>
+          </div>
+          <div class="seg seg-curriculum" role="group" aria-label="Curriculum">
+            <span class="seg-thumb" aria-hidden="true"></span>
+            <button type="button" class="seg-btn" data-curriculum="on" aria-pressed="false" disabled>Ontario curriculum</button>
+            <button type="button" class="seg-btn" data-curriculum="us" aria-pressed="true" disabled>US Common Core</button>
+          </div>
+        </div>
+
+        <div class="standards-paths">
+
+          <!-- Reading: twelve steps. data-land is
+               the step the spark stops on; it then goes on one more. Reading
+               goes furthest of the three, into the Grade 1 to 2 steps (the
+               founder, 2026-11-17: one path should reach past Grade 1). Only
+               those two steps carry what the slip says (data-says, data-grade
+               and the codes per curriculum; data-grade-on where Ontario's
+               name for the grade differs). -->
+          <div class="path path-reading is-on is-drawn is-lit is-noted" data-subject="reading" data-land="7" style="--at: 8">
+            <ol class="path-grades" aria-label="The grades this work sits in">
+              <li class="path-grade" style="--span: 1"><span class="path-grade-full"><span class="cur-us">Pre-K to K</span><span class="cur-on">JK to SK</span></span><span class="path-grade-short" aria-hidden="true"><span class="cur-us">PK–K</span><span class="cur-on">JK–SK</span></span></li>
+              <li class="path-grade" style="--span: 1"><span class="path-grade-full"><span class="cur-us">Kindergarten</span><span class="cur-on">SK</span></span><span class="path-grade-short" aria-hidden="true"><span class="cur-us">K</span><span class="cur-on">SK</span></span></li>
+              <li class="path-grade" style="--span: 2"><span class="path-grade-full"><span class="cur-us">K to Grade 1</span><span class="cur-on">SK to Grade 1</span></span><span class="path-grade-short" aria-hidden="true"><span class="cur-us">K–1</span><span class="cur-on">SK–1</span></span></li>
+              <li class="path-grade" style="--span: 2"><span class="path-grade-full">Grade 1</span><span class="path-grade-short" aria-hidden="true">Gr 1</span></li>
+              <li class="path-grade" style="--span: 4"><span class="path-grade-full">Grade 1 to 2</span><span class="path-grade-short" aria-hidden="true">Gr 1–2</span></li>
+              <li class="path-grade is-soon" style="--span: 1"><span class="path-grade-full">Grade 2</span><span class="path-grade-short" aria-hidden="true">Gr 2</span></li>
+              <li class="path-grade is-soon" style="--span: 1"><span class="path-grade-full">Grade 3</span><span class="path-grade-short" aria-hidden="true">Gr 3</span></li>
+            </ol>
+            <div class="path-track">
+              <span class="path-line" aria-hidden="true"><span class="path-line-done"></span></span>
+              <ol class="path-steps" aria-label="Reading steps">
+                <li class="path-step is-done"><span class="path-dot"></span><span class="path-label">Letter sounds</span></li>
+                <li class="path-step is-done"><span class="path-dot"></span><span class="path-label">Every letter</span></li>
+                <li class="path-step is-done"><span class="path-dot"></span><span class="path-label">Three-letter words</span></li>
+                <li class="path-step is-done"><span class="path-dot"></span><span class="path-label">sh and ch</span></li>
+                <li class="path-step is-done"><span class="path-dot"></span><span class="path-label">Two consonants in a row</span></li>
+                <li class="path-step is-done"><span class="path-dot"></span><span class="path-label">Long vowels, like cake</span></li>
+                <li class="path-step is-done" data-says="Reading vowel-team words like “rain” and “boat”." data-grade="Grade 1 to Grade 2" data-us="RF.1.3.c, RF.2.3.b" data-on="G1 B2.3"><span class="path-dot"></span><span class="path-label">Vowel teams, like rain</span></li>
+                <li class="path-step is-current" aria-current="step" data-says="Reading words like “farm”, “bird”, “coin” and “cow”." data-grade="Grade 1 to Grade 2" data-us="RF.2.3.a, RF.2.3.b" data-on="G1 B2.3"><span class="path-dot"></span><span class="path-label">Words like farm and coin</span></li>
+                <li class="path-step"><span class="path-dot"></span><span class="path-label">New spellings</span></li>
+                <li class="path-step"><span class="path-dot"></span><span class="path-label">Longer words</span></li>
+                <li class="path-step is-soon"><span class="path-dot"></span><span class="path-label">Prefixes and suffixes</span></li>
+                <li class="path-step is-soon"><span class="path-dot"></span><span class="path-label">Long words, part by part</span></li>
+              </ol>
+              <span class="path-spark" aria-hidden="true"><span class="path-spark-body"><span class="path-spark-glow"></span><svg viewBox="1958.1 -789.3 197.8 267.3" focusable="false"><path d="M2057.0 -789.3 Q2035.6 -677.0 1958.1 -655.6 Q2035.6 -634.3 2057.0 -522.0 Q2078.4 -634.3 2155.9 -655.6 Q2078.4 -677.0 2057.0 -789.3Z"/></svg></span></span>
+            </div>
+            <div class="path-note">
+              <span class="path-tether" aria-hidden="true"></span>
+              <div class="path-slip">
+                <span class="path-slip-label">How this matches school</span>
+                <p class="path-slip-says"><span data-slip="says">Reading words like “farm”, “bird”, “coin” and “cow”.</span></p>
+                <p class="path-slip-meta"><span class="path-chip"><span data-slip="grade">Grade 1 to Grade 2</span></span><span class="path-codes"><span data-slip="cites">Covers Common Core standards</span> <span class="path-code"><span data-slip="codes">RF.2.3.a, RF.2.3.b</span></span></span></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Writing: twelve steps, in the order of the grades they sit
+               in: nine in letters and spelling (the last is cursive, which
+               only Ontario's curriculum asks for, so its label says "in
+               Ontario" beside the Common Core) and three in composing. The
+               first two have an Ontario expectation but no Common Core
+               standard of their own, so the path stops on the third and
+               fourth, which both curricula cite. -->
+          <div class="path path-writing is-drawn is-lit is-noted" data-subject="writing" data-land="3" style="--at: 4">
+            <ol class="path-grades" aria-label="The grades this work sits in">
+              <li class="path-grade" style="--span: 2"><span class="path-grade-full"><span class="cur-us">Pre-K to K</span><span class="cur-on">JK to SK</span></span><span class="path-grade-short" aria-hidden="true"><span class="cur-us">PK–K</span><span class="cur-on">JK–SK</span></span></li>
+              <li class="path-grade" style="--span: 2"><span class="path-grade-full"><span class="cur-us">Kindergarten</span><span class="cur-on">SK</span></span><span class="path-grade-short" aria-hidden="true"><span class="cur-us">K</span><span class="cur-on">SK</span></span></li>
+              <li class="path-grade" style="--span: 1"><span class="path-grade-full"><span class="cur-us">K to Grade 1</span><span class="cur-on">SK to Grade 1</span></span><span class="path-grade-short" aria-hidden="true"><span class="cur-us">K–1</span><span class="cur-on">SK–1</span></span></li>
+              <li class="path-grade is-soon" style="--span: 1"><span class="path-grade-full">Grade 1</span><span class="path-grade-short" aria-hidden="true">Gr 1</span></li>
+              <li class="path-grade is-soon" style="--span: 1"><span class="path-grade-full">Grade 1 to 2</span><span class="path-grade-short" aria-hidden="true">Gr 1–2</span></li>
+              <li class="path-grade is-soon" style="--span: 2"><span class="path-grade-full">Grade 2</span><span class="path-grade-short" aria-hidden="true">Gr 2</span></li>
+              <li class="path-grade is-soon" style="--span: 3"><span class="path-grade-full">Grade 3</span><span class="path-grade-short" aria-hidden="true">Gr 3</span></li>
+            </ol>
+            <div class="path-track">
+              <span class="path-line" aria-hidden="true"><span class="path-line-done"></span></span>
+              <ol class="path-steps" aria-label="Writing steps">
+                <li class="path-step is-done"><span class="path-dot"></span><span class="path-label">Writing their name</span></li>
+                <li class="path-step is-done"><span class="path-dot"></span><span class="path-label">Letters, from a model</span></li>
+                <li class="path-step is-done" data-says="Writing the letter for a sound they hear." data-grade="Kindergarten" data-grade-on="Senior Kindergarten" data-us="RF.K.3.a" data-on="K A2.4"><span class="path-dot"></span><span class="path-label">The letter for a sound</span></li>
+                <li class="path-step is-current" aria-current="step" data-says="Spelling a word the way it sounds." data-grade="Kindergarten" data-grade-on="Senior Kindergarten" data-us="L.K.2.d, RF.K.3.b" data-on="K A2.5, G1 B2.4"><span class="path-dot"></span><span class="path-label">Spelling by sound</span></li>
+                <li class="path-step"><span class="path-dot"></span><span class="path-label">Spelling at their reading level</span></li>
+                <li class="path-step is-soon"><span class="path-dot"></span><span class="path-label">Sentences of their own</span></li>
+                <li class="path-step is-soon"><span class="path-dot"></span><span class="path-label">Spelling patterns</span></li>
+                <li class="path-step is-soon"><span class="path-dot"></span><span class="path-label">Sentences from dictation</span></li>
+                <li class="path-step is-soon"><span class="path-dot"></span><span class="path-label">Short texts</span></li>
+                <li class="path-step is-soon"><span class="path-dot"></span><span class="path-label">Words with endings</span></li>
+                <li class="path-step is-soon"><span class="path-dot"></span><span class="path-label">Paragraphs</span></li>
+                <li class="path-step is-soon"><span class="path-dot"></span><span class="path-label">Cursive<span class="cur-us">, in Ontario</span></span></li>
+              </ol>
+              <span class="path-spark" aria-hidden="true"><span class="path-spark-body"><span class="path-spark-glow"></span><svg viewBox="1958.1 -789.3 197.8 267.3" focusable="false"><path d="M2057.0 -789.3 Q2035.6 -677.0 1958.1 -655.6 Q2035.6 -634.3 2057.0 -522.0 Q2078.4 -634.3 2155.9 -655.6 Q2078.4 -677.0 2057.0 -789.3Z"/></svg></span></span>
+            </div>
+            <div class="path-note">
+              <span class="path-tether" aria-hidden="true"></span>
+              <div class="path-slip">
+                <span class="path-slip-label">How this matches school</span>
+                <p class="path-slip-says"><span data-slip="says">Spelling a word the way it sounds.</span></p>
+                <p class="path-slip-meta"><span class="path-chip"><span data-slip="grade">Kindergarten</span></span><span class="path-codes"><span data-slip="cites">Covers Common Core standards</span> <span class="path-code"><span data-slip="codes">L.K.2.d, RF.K.3.b</span></span></span></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Math: thirteen steps. -->
+          <div class="path path-math is-drawn is-lit is-noted" data-subject="math" data-land="4" style="--at: 5">
+            <ol class="path-grades" aria-label="The grades this work sits in">
+              <li class="path-grade" style="--span: 2"><span class="path-grade-full"><span class="cur-us">Pre-K to K</span><span class="cur-on">JK to SK</span></span><span class="path-grade-short" aria-hidden="true"><span class="cur-us">PK–K</span><span class="cur-on">JK–SK</span></span></li>
+              <li class="path-grade" style="--span: 1"><span class="path-grade-full"><span class="cur-us">Kindergarten</span><span class="cur-on">SK</span></span><span class="path-grade-short" aria-hidden="true"><span class="cur-us">K</span><span class="cur-on">SK</span></span></li>
+              <li class="path-grade" style="--span: 3"><span class="path-grade-full"><span class="cur-us">K to Grade 1</span><span class="cur-on">SK to Grade 1</span></span><span class="path-grade-short" aria-hidden="true"><span class="cur-us">K–1</span><span class="cur-on">SK–1</span></span></li>
+              <li class="path-grade" style="--span: 2"><span class="path-grade-full">Grade 1</span><span class="path-grade-short" aria-hidden="true">Gr 1</span></li>
+              <li class="path-grade is-soon" style="--span: 1"><span class="path-grade-full">Grade 2</span><span class="path-grade-short" aria-hidden="true">Gr 2</span></li>
+              <li class="path-grade is-soon" style="--span: 2"><span class="path-grade-full">Grade 2 to 3</span><span class="path-grade-short" aria-hidden="true">Gr 2–3</span></li>
+              <li class="path-grade is-soon" style="--span: 2"><span class="path-grade-full">Grade 3</span><span class="path-grade-short" aria-hidden="true">Gr 3</span></li>
+            </ol>
+            <div class="path-track">
+              <span class="path-line" aria-hidden="true"><span class="path-line-done"></span></span>
+              <ol class="path-steps" aria-label="Math steps">
+                <li class="path-step is-done"><span class="path-dot"></span><span class="path-label">How many, at a glance</span></li>
+                <li class="path-step is-done"><span class="path-dot"></span><span class="path-label">Counting a group</span></li>
+                <li class="path-step is-done"><span class="path-dot"></span><span class="path-label">Which has more</span></li>
+                <li class="path-step is-done" data-says="Reading and writing numbers up to 20." data-grade="Kindergarten to Grade 1" data-grade-on="Senior Kindergarten to Grade 1" data-us="K.CC.A.3, K.NBT.A.1" data-on="K A6.3, G1 B1.1"><span class="path-dot"></span><span class="path-label">Numbers up to 20</span></li>
+                <li class="path-step is-current" aria-current="step" data-says="Breaking a number into two smaller parts." data-grade="Kindergarten to Grade 1" data-grade-on="Senior Kindergarten to Grade 1" data-us="K.OA.A.3, K.OA.A.4" data-on="K A6.5, G1 B1.2"><span class="path-dot"></span><span class="path-label">Parts of a number</span></li>
+                <li class="path-step"><span class="path-dot"></span><span class="path-label">Adding and subtracting within 10</span></li>
+                <li class="path-step"><span class="path-dot"></span><span class="path-label">Counting on</span></li>
+                <li class="path-step"><span class="path-dot"></span><span class="path-label">Using a fact you know</span></li>
+                <li class="path-step is-soon"><span class="path-dot"></span><span class="path-label">Adding and subtracting to 100</span></li>
+                <li class="path-step is-soon"><span class="path-dot"></span><span class="path-label">Numbers to 1,000</span></li>
+                <li class="path-step is-soon"><span class="path-dot"></span><span class="path-label">Equal groups</span></li>
+                <li class="path-step is-soon"><span class="path-dot"></span><span class="path-label">Multiplying and dividing</span></li>
+                <li class="path-step is-soon"><span class="path-dot"></span><span class="path-label">Fair shares and fractions</span></li>
+              </ol>
+              <span class="path-spark" aria-hidden="true"><span class="path-spark-body"><span class="path-spark-glow"></span><svg viewBox="1958.1 -789.3 197.8 267.3" focusable="false"><path d="M2057.0 -789.3 Q2035.6 -677.0 1958.1 -655.6 Q2035.6 -634.3 2057.0 -522.0 Q2078.4 -634.3 2155.9 -655.6 Q2078.4 -677.0 2057.0 -789.3Z"/></svg></span></span>
+            </div>
+            <div class="path-note">
+              <span class="path-tether" aria-hidden="true"></span>
+              <div class="path-slip">
+                <span class="path-slip-label">How this matches school</span>
+                <p class="path-slip-says"><span data-slip="says">Breaking a number into two smaller parts.</span></p>
+                <p class="path-slip-meta"><span class="path-chip"><span data-slip="grade">Kindergarten to Grade 1</span></span><span class="path-codes"><span data-slip="cites">Covers Common Core standards</span> <span class="path-code"><span data-slip="codes">K.OA.A.3, K.OA.A.4</span></span></span></p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="standards-points">
+        <div class="standards-point">
+          <h3>Starts where you live</h3>
+          <p>Tell us your province or state when you sign up, and Ilumi cites your curriculum: Ontario’s, or the US Common Core.</p>
+        </div>
+        <div class="standards-point">
+          <h3>Mapped step by step</h3>
+          <p>Reading has twelve steps, writing twelve and math thirteen, each matched to the lines of the curriculum it covers. Three of the earliest, and cursive, have no line of their own in the Common Core.</p>
+        </div>
+        <div class="standards-point">
+          <h3>A grade for you, never for them</h3>
+          <p>The grade describes the work, not your child. You can look it up whenever you like. Your child only ever sees the story.</p>
+        </div>
+      </div>
+
+      <p class="standards-fine">Mapped by Ilumi against each curriculum’s published text. Somewhere else? <a href="contact.html" data-contact>Tell us your curriculum</a>.</p>
+
+    </div>
+  </section>
+
+  <!-- ===================== THE WHY =====================
+       The memory and the reasoning layer, as one section: a dark panel, the
+       evening after the session. On the left the note Ilumi writes to the
+       parent, a card on its own, centred (no painting behind it: the founder
+       took that out, 2026-11-17); on the right the writing, and under it four
+       plain lines of text (they took the place of three painted cards, which
+       read as buttons). Each row of the note starts with the score a
+       dashboard would keep and then says why. From 1000px wide the whole
+       section fits one window.
+
+       The markup is the finished still; main.js (initWhy) only hides the note
+       until it comes into view and then lets the stylesheet write it in, row
+       by row.
+
+       The way in is a fade tied to the scroll (data-fade, initFades in
+       main.js): as the page scrolls from the curriculum to this section, the
+       curriculum's content fades out on its way up and the panel fades in
+       and grows into its place on its way up behind it. Nothing stops.
+
+       Everything in the note is an ILLUSTRATION: the app does not write notes
+       yet, and Leo is made up (the same Leo as the math scene's note). What
+       the copy may claim is at "The why section" in README.md. Keep every
+       line of the note to what was seen and how often (never a trait of the
+       child), and the callback to what the child SAID. -->
+  <section class="why" id="the-why" aria-labelledby="why-title">
+    <div class="why-stage">
+    <div class="why-panel" data-fade="in out" data-fade-in="1.02 0.42" data-fade-as="panel">
+      <!-- The app's meadow birds, crossing the night behind the writing. Empty
+           here on purpose: main.js (initWhyBirds) puts them in, and only
+           where motion is allowed. A bird that does not move has no place. -->
+      <div class="why-birds" aria-hidden="true"></div>
+      <div class="why-inner">
+
+        <div class="why-head">
+          <p class="why-eyebrow"><span class="why-eyebrow-mark" aria-hidden="true"><svg viewBox="1958.1 -789.3 197.8 267.3" focusable="false"><path d="M2057.0 -789.3 Q2035.6 -677.0 1958.1 -655.6 Q2035.6 -634.3 2057.0 -522.0 Q2078.4 -634.3 2155.9 -655.6 Q2078.4 -677.0 2057.0 -789.3Z"/></svg></span>The note</p>
+          <h2 class="why-title" id="why-title"><span>A score tells you what happened.</span> <span>Ilumi tells you why.</span></h2>
+          <p class="why-lede">Ilumi watches how your child reaches each answer, remembers what they tell it, and writes it down for you.</p>
+        </div>
+
+        <figure class="why-visual">
+            <div class="why-note" role="group" aria-label="Tonight’s note about Leo: each score, and what Ilumi’s note says about it">
+              <p class="why-note-head"><span class="why-note-label">Tonight’s note about Leo</span><span class="why-tag">Illustration</span></p>
+              <div class="why-row why-reading" style="--d: 0.5">
+                <p class="why-score"><span class="why-subject">Reading</span><span class="why-score-value" aria-label="Score, 10 of 12.">10<span>/12</span></span></p>
+                <p class="why-says">“Hop” for “hope”, “cap” for “cape”: the silent e, <mark>2 of 4</mark> times. He fixed “kite” himself.</p>
+              </div>
+              <div class="why-row why-math" style="--d: 1.3">
+                <p class="why-score"><span class="why-subject">Math</span><span class="why-score-value" aria-label="Score, 5 of 5.">5<span>/5</span></span><span class="why-score-was">Last month, 5/5</span></p>
+                <p class="why-says">Counted on from three in <mark>4 of 5</mark> problems. Last month, he started from one.</p>
+              </div>
+              <div class="why-row why-writing" style="--d: 2.1">
+                <p class="why-score"><span class="why-subject">Writing</span><span class="why-score-value" aria-label="Score, 2 of 3.">2<span>/3</span></span></p>
+                <p class="why-says">Wrote “fsh” for “fish”: <mark>every sound but the vowel</mark>.</p>
+              </div>
+              <div class="why-row why-next" style="--d: 2.9">
+                <p class="why-score"><span class="why-subject"><svg viewBox="1958.1 -789.3 197.8 267.3" aria-hidden="true" focusable="false"><path d="M2057.0 -789.3 Q2035.6 -677.0 1958.1 -655.6 Q2035.6 -634.3 2057.0 -522.0 Q2078.4 -634.3 2155.9 -655.6 Q2078.4 -677.0 2057.0 -789.3Z"/></svg>Tomorrow</span></p>
+                <p class="why-says">A kite story, full of silent-e words. He told the swallow he’d rather fly than swim.</p>
+              </div>
+            </div>
+        </figure>
+
+        <!-- Plain text on purpose: no frames, tags or icons, so nothing here
+             looks like it can be pressed. -->
+        <ul class="why-points">
+          <li>
+            <h3>How, not just how many</h3>
+            <p>Counting on, or counting from one.</p>
+          </li>
+          <li>
+            <h3>What they tell it comes back</h3>
+            <p>Fly or swim? It remembers.</p>
+          </li>
+          <li>
+            <h3>Counts, never labels</h3>
+            <p>What it saw, and how often.</p>
+          </li>
+          <li>
+            <h3>A report for you</h3>
+            <p>How your child is doing, any time.</p>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- ===================== GROWS =====================
+       "More than a tutor": the morning after the note. A painting of the
+       child and the rabbit on a ledge high over the valley, the writing in
+       its sky, and two strips of the app's paper in it: the rabbit's
+       question and the child's answer.
+
+       The markup is the finished still, and it is all that phones, short
+       windows, reduced motion and no-JS get; there the why panel fades out
+       and this one fades in as the page scrolls (data-fade).
+
+       The way out, to the waitlist, is a fade everywhere: the panel fades
+       into the paper as it goes up the window, its foot melting first
+       (data-fade "out", data-fade-leave and data-fade-melt; initFades).
+
+       On a wide window main.js (initGrows) pins the two sections as one:
+       the star beside "The note" flies loose, the why panel's writing goes,
+       clouds and stars come into the night, and the star opens into a
+       circle of daylight on the child and the rabbit that grows until the
+       whole painting stands. The heading comes in on the night and turns to
+       ink as the light passes over it. Everything in .grows-night, the rim
+       and the star is built or shown by main.js only.
+
+       What the copy may claim is at "The grows section" in README.md. Never
+       "personality", "learning style", "the way your child learns",
+       "relationship" or "companion" here. -->
+  <section class="grows" id="grows" aria-labelledby="grows-title">
+    <div class="grows-stage">
+    <div class="grows-panel" data-fade="in out" data-fade-in="1.02 0.42" data-fade-leave="0.03 0.62" data-fade-as="panel" data-fade-melt>
+      <div class="grows-night" aria-hidden="true"><div class="grows-stars"></div><div class="grows-clouds"></div></div>
+
+      <div class="grows-world">
+        <figure class="grows-visual">
+          <img class="grows-painting" src="assets/grows/ledge.webp" width="1672" height="941" loading="lazy" decoding="async" alt="A child and the rabbit sit side by side on a grassy ledge high over the valley. The child holds an open book and looks up, smiling, to where the rabbit is pointing.">
+          <div class="grows-veil" aria-hidden="true"></div>
+          <!-- Illustration: the question is designed, not built (README). -->
+          <figcaption class="grows-says">
+            <p class="grows-say grows-say-rabbit"><span>The rabbit asks</span>A big leap or a careful step?</p>
+            <p class="grows-say grows-say-child"><span>Leo says</span>“A big <mark>leap</mark>!”</p>
+          </figcaption>
+        </figure>
+
+        <div class="grows-inner">
+          <div class="grows-copy">
+            <p class="grows-eyebrow"><span class="grows-eyebrow-mark" aria-hidden="true"><svg viewBox="1958.1 -789.3 197.8 267.3" focusable="false"><path d="M2057.0 -789.3 Q2035.6 -677.0 1958.1 -655.6 Q2035.6 -634.3 2057.0 -522.0 Q2078.4 -634.3 2155.9 -655.6 Q2078.4 -677.0 2057.0 -789.3Z"/></svg></span>More than a tutor</p>
+            <h2 class="grows-title" id="grows-title"><span>The longer they learn together,</span> <span>the better Ilumi teaches.</span></h2>
+            <p class="grows-lede">Ilumi starts from what your child already knows, and learns what helps them with every session.</p>
+
+            <!-- Plain text on purpose, like the why section's lines: no frames,
+                 icons, tags or hover, so nothing here looks like it can be
+                 pressed. -->
+            <ul class="grows-points">
+              <li>
+                <h3>It asks. It never guesses.</h3>
+                <p>A big leap or a careful step? Your child chooses, and new things come their way.</p>
+              </li>
+              <li>
+                <h3>Their thinking is never graded</h3>
+                <p>The guides ask what your child thinks will happen, and why. No stars, no score.</p>
+              </li>
+              <li>
+                <h3>No streaks, no notifications</h3>
+                <p>Nothing calls your child back to the screen. The reminder comes to you, never to them.</p>
+              </li>
+            </ul>
+
+            <!-- Goes nowhere yet (README, "Things to change before launch"). -->
+            <a class="grows-more" href="how-it-works.html">How it works</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="grows-rim" aria-hidden="true"></div>
+      <svg class="grows-trail" aria-hidden="true" focusable="false"><path/></svg>
+      <div class="grows-fly" aria-hidden="true"><i class="grows-fly-aura"></i><i class="grows-fly-glow"></i><svg viewBox="1958.1 -789.3 197.8 267.3" focusable="false"><path d="M2057.0 -789.3 Q2035.6 -677.0 1958.1 -655.6 Q2035.6 -634.3 2057.0 -522.0 Q2078.4 -634.3 2155.9 -655.6 Q2078.4 -677.0 2057.0 -789.3Z"/></svg></div>
+    </div>
+    </div>
+  </section>
+
+  <!-- ===================== WAITLIST =====================
+       Where "Join the waitlist" in the hero lands: one email field, on the
+       questions section's paper, so the two read as one ground.
+
+       The markup is the finished still. With motion allowed, and only if the
+       section starts below the window, main.js (initWaitlist) hides it and
+       writes it in once when the reader gets to it: the writing, then the
+       field over its glow, then the line under it, then the painting.
+
+       The painting at the foot is the heading drawn: the three guides round
+       a lantern on the grass, and an empty mat between them. The lantern is
+       out. It catches low while the reader is in the field or has written
+       in it (CSS alone), and lights fully only when an address has really
+       been taken (.is-lit, set by main.js with .waitlist-done). The picture
+       is on white and lies on the paper with mix-blend-mode: multiply, so
+       nothing between it and the section may make a stacking context (no
+       transform, opacity or z-index on .waitlist-place).
+
+       From 1000px wide two plants from the world stand at the edges
+       (.waitlist-plants): an oak branch coming in from the left beside the
+       heading, and a clump of ferns in the bottom right corner. They are
+       decoration only, and a phone has neither.
+
+       The form posts to its own action attribute, which is empty: nothing
+       is collected yet, and the form says so (README, "Things to change
+       before launch"). What the copy may claim is at "The waitlist section"
+       in README.md: never a price, a date or how many families. -->
+  <section class="waitlist" id="waitlist" aria-labelledby="waitlist-title">
+    <div class="waitlist-plants" aria-hidden="true">
+      <img class="waitlist-plant waitlist-branch" src="assets/waitlist/branch.webp" width="880" height="574" alt="" loading="lazy" decoding="async" draggable="false" style="--d: 0.3">
+      <img class="waitlist-plant waitlist-fern" src="assets/waitlist/fern-right.webp" width="560" height="558" alt="" loading="lazy" decoding="async" draggable="false" style="--d: 0.75">
+    </div>
+    <div class="waitlist-inner">
+
+      <div class="waitlist-head">
+        <p class="waitlist-eyebrow" style="--d: 0"><span class="waitlist-eyebrow-mark" aria-hidden="true"><svg viewBox="1958.1 -789.3 197.8 267.3" focusable="false"><path d="M2057.0 -789.3 Q2035.6 -677.0 1958.1 -655.6 Q2035.6 -634.3 2057.0 -522.0 Q2078.4 -634.3 2155.9 -655.6 Q2078.4 -677.0 2057.0 -789.3Z"/></svg></span>Founding families</p>
+        <h2 class="waitlist-title" id="waitlist-title" style="--d: 0.08">Save your child a place.</h2>
+        <p class="waitlist-lede" style="--d: 0.16"><span>We’re inviting founding families first.</span> <span>Leave your email, and we’ll write when your child’s place is ready.</span></p>
+      </div>
+
+      <div class="waitlist-stand" style="--d: 0.34">
+        <span class="waitlist-glow" aria-hidden="true"></span>
+
+        <form class="waitlist-form" id="waitlist-form" name="waitlist" method="post" action="">
+          <input type="hidden" name="form-name" value="waitlist">
+          <div class="waitlist-field">
+            <label class="waitlist-label" for="waitlist-email">Your email address</label>
+            <input class="waitlist-input" id="waitlist-email" name="email" type="email" required autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" placeholder="you@family.com" aria-describedby="waitlist-status">
+            <button class="url-btn waitlist-go" type="submit"><span class="waitlist-go-label">Join the waitlist</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
+          </div>
+        </form>
+
+        <!-- Takes the form's place once an address has been taken (main.js). -->
+        <div class="waitlist-done" tabindex="-1" hidden>
+          <span class="waitlist-done-mark" aria-hidden="true"><svg viewBox="1958.1 -789.3 197.8 267.3" focusable="false"><path d="M2057.0 -789.3 Q2035.6 -677.0 1958.1 -655.6 Q2035.6 -634.3 2057.0 -522.0 Q2078.4 -634.3 2155.9 -655.6 Q2078.4 -677.0 2057.0 -789.3Z"/></svg></span>
+          <p><strong>You’re on the list.</strong> <span>We’ll write to <b class="waitlist-done-email">you</b> when your child’s place is ready.</span></p>
+        </div>
+      </div>
+
+      <p class="waitlist-under" style="--d: 0.5">
+        <span class="waitlist-fine"><span>Ages 4 to 8</span><span>On iPad</span><span>Reading, writing and math</span></span>
+        <span class="waitlist-status" id="waitlist-status" role="status" aria-live="polite"></span>
+      </p>
+
+    </div>
+
+    <div class="waitlist-place">
+      <span class="waitlist-lamp" aria-hidden="true"></span>
+      <div class="waitlist-art" style="--d: 0.62">
+        <img class="waitlist-art-day" src="assets/waitlist/place.webp" width="1504" height="880" alt="The rabbit, the squirrel and the swallow sit on the grass round a small lantern. Between them is an empty straw mat." loading="lazy" decoding="async" draggable="false">
+        <img class="waitlist-art-lit" src="assets/waitlist/place-lit.webp" width="152" height="134" alt="" loading="lazy" decoding="async" draggable="false">
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== QUESTIONS =====================
+       The questions a parent asks before signing up, on the curriculum
+       section's paper. From 1000px wide the heading stands on the left and
+       stays in the window while the questions scroll past on the right;
+       narrower it is one column.
+
+       Each question is a <details>, so it opens without JS; main.js (initFaq)
+       only eases the height. The first sentence of every answer is the
+       answer (<strong>); the rest is the reason.
+
+       Every answer was checked against the app repo, and what each one may
+       and may not claim is at "The questions section" in README.md. Change
+       an answer only from there. Never "companion", "personality" or
+       "learning style" here, never a price or a date, and never that a
+       child is "behind". -->
+  <section class="faq" id="faq" aria-labelledby="faq-title">
+    <div class="faq-inner">
+
+      <div class="faq-head">
+        <p class="faq-eyebrow" data-reveal><span class="faq-eyebrow-mark" aria-hidden="true"><svg viewBox="1958.1 -789.3 197.8 267.3" focusable="false"><path d="M2057.0 -789.3 Q2035.6 -677.0 1958.1 -655.6 Q2035.6 -634.3 2057.0 -522.0 Q2078.4 -634.3 2155.9 -655.6 Q2078.4 -677.0 2057.0 -789.3Z"/></svg></span>Before you join</p>
+        <h2 class="faq-title" data-reveal id="faq-title"><span>Questions</span> <span>worth asking.</span></h2>
+        <p class="faq-lede" data-reveal>Plain answers about how Ilumi teaches, what it keeps, and what it will never do.</p>
+        <!-- Goes nowhere yet (README, "Things to change before launch"). -->
+        <p class="faq-ask" data-reveal>
+          <span class="faq-faces" aria-hidden="true"><img src="assets/guides/avatar-rabbit.webp" alt="" width="40" height="40" loading="lazy"><img src="assets/guides/avatar-swallow.webp" alt="" width="40" height="40" loading="lazy"><img src="assets/guides/avatar-squirrel.webp" alt="" width="40" height="40" loading="lazy"></span>
+          <span>Something we didn’t answer? <a href="contact.html" data-contact>Ask us</a>.</span>
+        </p>
+      </div>
+
+      <div class="faq-groups">
+
+        <div class="faq-group" role="group" aria-labelledby="faq-basics">
+          <h3 class="faq-group-title" data-reveal id="faq-basics">The basics</h3>
+          <details class="faq-item" data-reveal open>
+            <summary><span class="faq-q">What ages is Ilumi for?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+            <div class="faq-a"><p><strong>Four to eight, from Pre-K to Grade 3.</strong> Age only tells Ilumi where to look first. A short first session finds what your child can already do, in reading, writing and math separately. It starts on the easy side on purpose, so the first few minutes feel like something they can do.</p></div>
+          </details>
+          <details class="faq-item" data-reveal>
+            <summary><span class="faq-q">What does my child need to use it?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+            <div class="faq-a"><p><strong>An iPad, and a room quiet enough to read aloud in.</strong> They don’t need to read yet: every instruction is spoken by a guide. Ilumi listens while they read, they write with a finger or a stylus, and they count by moving things on the screen. It teaches in English.</p></div>
+          </details>
+          <details class="faq-item" data-reveal>
+            <summary><span class="faq-q">Does Ilumi replace school, or a teacher?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+            <div class="faq-a"><p><strong>No.</strong> It is practice at home for the work they do in class. Ilumi’s steps map to the Ontario curriculum and the US Common Core, and you can see which line of the curriculum each step covers, so it is easy to set beside what their teacher tells you.</p></div>
+          </details>
+        </div>
+
+        <div class="faq-group" role="group" aria-labelledby="faq-teaching">
+          <h3 class="faq-group-title" data-reveal id="faq-teaching">How it teaches</h3>
+          <details class="faq-item" data-reveal>
+            <summary><span class="faq-q">Is my child talking to a chatbot?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+            <div class="faq-a"><p><strong>No.</strong> Nothing a guide says is made up on the spot: every line was written before it reached your child. The AI in Ilumi is the part that listens. It runs on the iPad and checks the word your child read against the word on the page, and what comes next is chosen by rules we can test, not by a model’s guess. We do use AI at our desks, to help draft stories from only the letter sounds a child has been taught, and every word is checked against that list before a story goes in.</p></div>
+          </details>
+          <details class="faq-item" data-reveal>
+            <summary><span class="faq-q">How will I know how my child is doing?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+            <div class="faq-a"><p><strong>Ilumi tells you what it saw, in plain words.</strong> You get a report every Sunday, and the parent’s side shows each step your child has cleared, the grade that work sits in and the line of the curriculum it covers. It reports what happened and how often. It never calls a child ahead or behind.</p></div>
+          </details>
+          <details class="faq-item" data-reveal>
+            <summary><span class="faq-q">What happens when Ilumi mishears my child?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+            <div class="faq-a"><p><strong>A stuck word never stops the story.</strong> Speech recognition is imperfect with young voices, and ours is no exception. So when a word doesn’t come through, your child never sees a red mark. The guide gives one hint, then reads the word together with them, and the story carries on. That word is noted as helped, so it never counts as read when it wasn’t.</p></div>
+          </details>
+          <details class="faq-item" data-reveal>
+            <summary><span class="faq-q">My child finds reading hard. Is Ilumi for them?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+            <div class="faq-a"><p><strong>It starts where they are, and it never labels them.</strong> A child moves up only when a step has held on three separate days, so one who needs more time gets it. Ilumi is not a screening tool and it does not diagnose anything. If you are worried about dyslexia or a learning difficulty, their teacher or a specialist is the person to ask.</p></div>
+          </details>
+          <details class="faq-item" data-reveal>
+            <summary><span class="faq-q">What is the teaching based on?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+            <div class="faq-a"><p><strong>Published research, step by step.</strong> Every step, and every kind of exercise, traces to a study we can name. That is why some of Ilumi looks unusual: children spell words by their sounds instead of tracing letters, no math question is multiple choice, and there is never a timer on the screen.</p></div>
+          </details>
+        </div>
+
+        <div class="faq-group" role="group" aria-labelledby="faq-privacy">
+          <h3 class="faq-group-title" data-reveal id="faq-privacy">Privacy and safety</h3>
+          <details class="faq-item" data-reveal>
+            <summary><span class="faq-q">Is my child’s voice recorded?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+            <div class="faq-a"><p><strong>It is heard, and then it is gone.</strong> Ilumi listens on the iPad itself, checks the word, and discards the sound straight away. Your child’s voice is never saved and never leaves the device, so no other company ever hears it.</p></div>
+          </details>
+          <details class="faq-item" data-reveal>
+            <summary><span class="faq-q">What does Ilumi keep, and where?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+            <div class="faq-a"><p><strong>Your child’s sessions stay on your iPad.</strong> What they read, write and count, and what they tell a guide, is stored on the device. Our servers hold your parent account, your subscription and your consent records, and overall numbers that never include a child’s sessions. Nothing is used to train AI unless you separately agree: that choice starts switched off, and Ilumi works the same either way. You can delete your child’s profile, or everything, from the parent settings.</p></div>
+          </details>
+          <details class="faq-item" data-reveal>
+            <summary><span class="faq-q">Are there ads, or other people?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+            <div class="faq-a"><p><strong>No ads, and nobody else.</strong> There are no other players, no chat and no leaderboards, so no one can reach your child through Ilumi and no one’s score is ever set beside theirs. Nothing is sold to a child either: the parent’s side sits behind a sum a young child can’t do.</p></div>
+          </details>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<script src="js/main.js" defer></script>
+</body>
+</html>

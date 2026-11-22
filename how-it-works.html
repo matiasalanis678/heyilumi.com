@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- What the page may load: its own files and Google Fonts, nothing else.
+       The waitlist form posts with fetch, so the address it posts to must be
+       added to connect-src and form-action here when it is connected. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; media-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'self'; object-src 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>How Ilumi works | Ilumi</title>
+  <meta name="description" content="What you do, what your child does, and what Ilumi does in between: the first session, a day in the app, how children move up, and what happens when they get stuck.">
+  <link rel="canonical" href="https://heyilumi.com/how-it-works.html">
+  <meta name="application-name" content="Ilumi">
+  <meta property="og:title" content="How Ilumi works">
+  <meta property="og:description" content="What you do, what your child does, and what Ilumi does in between.">
+  <meta property="og:url" content="https://heyilumi.com/how-it-works.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Ilumi">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Geist:wght@400..700&family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400..500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/how.css">
+</head>
+<body class="how-page">
+<!-- The spark over the i of the wordmark, drawn by every eyebrow on this page
+     (the same path as #ilumi-wordmark-glyphs .wordmark-spark in index.html). -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><path id="how-spark" d="M2057.0 -789.3 Q2035.6 -677.0 1958.1 -655.6 Q2035.6 -634.3 2057.0 -522.0 Q2078.4 -634.3 2155.9 -655.6 Q2078.4 -677.0 2057.0 -789.3Z"/></defs></svg>
+
+<!-- ===================== HEADER ===================== -->
+<!-- The homepage's header, the same markup. Here there is no guides section to
+     wait for, so initNav (js/main.js) turns it into the pill after 80px of
+     scroll (NAV_SCROLL_AT). The page's links go back to the homepage's
+     sections; "How it works" is this page. -->
+<header class="site-header" id="site-header">
+  <div class="nav-row">
+    <span class="nav-glass nav-surface" aria-hidden="true"></span>
+
+    <div class="nav-logo">
+      <a aria-label="Ilumi" class="logo-link" href="index.html"><img src="assets/ilumi-logo.png" alt="Ilumi" width="140" height="122"></a>
+    </div>
+
+    <nav class="nav-links" aria-label="Main">
+      <a class="nav-link" href="#start" aria-current="page">How it works</a>
+      <a class="nav-link" href="index.html#faq">Questions</a>
+      <a class="nav-link" href="contact.html" data-contact>Contact us</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a href="index.html#waitlist" class="btn-ink nav-cta">
+        <span class="roll"><span class="roll-track"><span>Join the waitlist</span><span aria-hidden="true">Join the waitlist</span></span></span>
+        <span class="roll-arrow" aria-hidden="true"><span class="roll-arrow-track"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span></span>
+      </a>
+      <button type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-drawer" class="glass-chip menu-btn">
+        <svg class="menu-icon-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        <svg class="menu-icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="vellum-field nav-drawer" id="nav-drawer">
+    <div class="nav-drawer-inner">
+      <nav class="nav-drawer-links" aria-label="Menu">
+        <a href="#start" aria-current="page">How it works</a>
+        <a href="index.html#faq">Questions</a>
+        <a href="contact.html" data-contact>Contact us</a>
+      </nav>
+      <div class="nav-drawer-cta">
+        <a href="index.html#waitlist" class="btn-ink">Join the waitlist<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="how">
+
+  <!-- ===================== 1. THE FIRST DAY: FOUR STEPS ===================== -->
+  <!-- The page's opening and the four steps from sign-up to the first day at
+     camp, as cards (the fit follows the "How it works" cards of
+     imagio.framer.website: a step label, a small piece of the app on a panel of
+     its own, then a title and one line). Each card says who does the step. -->
+  <section class="how-start" id="start" aria-labelledby="how-title">
+    <div class="how-wrap">
+      <header class="how-head how-head-center" data-reveal>
+        <p class="how-eyebrow"><span class="how-eyebrow-mark" aria-hidden="true"><svg viewBox="1958.1 -789.3 197.8 267.3"><use href="#how-spark"/></svg></span>How it works</p>
+        <h1 class="how-title how-title-xl" id="how-title"><span>From the first hello</span> <span>to the hundredth day.</span></h1>
+        <p class="how-lede">Ilumi is a tutor for reading, writing and math, for ages 4 to 8. Here is what you do, what your child does, and what Ilumi does in between.</p>
+      </header>
+
+      <ol class="how-steps">
+        <li class="how-step" data-reveal style="--d: 0">
+          <div class="how-step-stage">
+            <p class="how-step-label"><span>Step 01</span><span class="how-step-who">You</span></p>
+            <div class="how-mock how-mock-ask" aria-hidden="true">
+              <p class="how-mock-q">Does Leo know the sounds letters make?</p>
+              <div class="how-mock-pills">
+                <span>Not yet</span><span class="is-on">Some of them</span><span>Most or all</span>
+              </div>
+            </div>
+          </div>
+          <h2 class="how-step-title">You tell us about your child</h2>
+          <p class="how-step-body">Their age, their grade, where you live, and what they can already do. You give consent before the microphone ever turns on.</p>
+        </li>
+
+        <li class="how-step" data-reveal style="--d: 0.08">
+          <div class="how-step-stage">
+            <p class="how-step-label"><span>Step 02</span><span class="how-step-who">Your child</span></p>
+            <div class="how-mock how-mock-path" aria-hidden="true">
+              <div class="how-stops">
+                <span class="how-stop is-lit" style="--accent: #e8503a"><img src="assets/guides/avatar-rabbit.webp" alt="" width="144" height="144"></span>
+                <span class="how-stop-line is-lit"></span>
+                <span class="how-stop is-lit" style="--accent: #f2b01e"><img src="assets/guides/avatar-squirrel.webp" alt="" width="144" height="144"></span>
+                <span class="how-stop-line"></span>
+                <span class="how-stop" style="--accent: #2f6fd0"><img src="assets/guides/avatar-swallow.webp" alt="" width="144" height="144"></span>
+              </div>
+              <div class="how-stop-names"><span>Reading</span><span>Math</span><span>Writing</span></div>
+            </div>
+          </div>
+          <h2 class="how-step-title">They meet the rabbit</h2>
+          <p class="how-step-body">A first session that feels like play: reading aloud, counting, writing. Nothing is marked right or wrong.</p>
+        </li>
+
+        <li class="how-step" data-reveal style="--d: 0.16">
+          <div class="how-step-stage">
+            <p class="how-step-label"><span>Step 03</span><span class="how-step-who">You</span></p>
+            <div class="how-mock how-mock-slip" aria-hidden="true">
+              <div class="how-slip">
+                <p class="how-slip-label">Where Leo is starting</p>
+                <p class="how-slip-says">Leo knows the sound for 21 of the 26 letters we showed.</p>
+                <p class="how-slip-chip">Reading · Math · Writing, each on its own</p>
+              </div>
+            </div>
+          </div>
+          <h2 class="how-step-title">You see where they’re starting</h2>
+          <p class="how-step-body">In plain words, opening with something they can do. Reading, math and writing each get their own starting step.</p>
+        </li>
+
+        <li class="how-step" data-reveal style="--d: 0.24">
+          <div class="how-step-stage how-step-stage-camp">
+            <img class="how-camp" src="assets/how/camp-day.webp" alt="" width="1400" height="933" loading="lazy">
+            <img class="how-camp-rabbit" src="assets/guides/rabbit.webp" alt="" width="345" height="640" loading="lazy">
+            <span class="how-tap" aria-hidden="true"></span>
+            <p class="how-step-label"><span>Step 04</span><span class="how-step-who">Your child</span></p>
+          </div>
+          <h2 class="how-step-title">Every day, camp is waiting</h2>
+          <p class="how-step-body">The rabbit waves by its door, and one tap starts today’s session. No menu, and nothing to read.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===================== 2. INSIDE A SESSION ===================== -->
+  <!-- The shape every session has, in six numbered rows (the fit follows the
+     numbered feature list of imagio.framer.website/features: a picture on the
+     left, the rows on the right, one open at a time). Opening a row changes
+     the picture (initSession in js/how.js); nothing advances by itself. Every
+     guide line on the pictures is the app's own (README, "The How it works
+     page"). The markup is the finished still: row 01 open, its picture showing. -->
+  <section class="how-session" id="session" aria-labelledby="session-title">
+    <div class="how-wrap">
+      <header class="how-head" data-reveal>
+        <p class="how-eyebrow"><span class="how-eyebrow-mark" aria-hidden="true"><svg viewBox="1958.1 -789.3 197.8 267.3"><use href="#how-spark"/></svg></span>Inside a session</p>
+        <h2 class="how-title" id="session-title">The same six steps, every time.</h2>
+        <p class="how-lede">Your child always knows what comes next. What changes is the story. Today’s: a fox, a hen, and only one box.</p>
+      </header>
+
+      <div class="how-session-grid">
+        <div class="how-pictures" aria-hidden="true" data-reveal>
+          <!-- 01 Warm-up: camp by day, the rabbit's warm-up line and a word. -->
+          <figure class="how-picture is-on" data-step="1" style="--scene: url(../assets/how/camp-day.webp)">
+            <img class="how-picture-guide" src="assets/guides/rabbit.webp" alt="" width="345" height="640" loading="lazy">
+            <figcaption class="how-picture-says">
+              <span class="how-bubble">Let’s warm up. Read this one for me.</span>
+              <span class="how-word">hen</span>
+            </figcaption>
+          </figure>
+          <!-- 02 Something new: the glade, the rabbit's teach line for blending (the app's band 3 teach, with today's word in it). -->
+          <figure class="how-picture" data-step="2" style="--scene: url(../assets/guides/scene-glade.webp)">
+            <img class="how-picture-guide" src="assets/guides/rabbit.webp" alt="" width="345" height="640" loading="lazy">
+            <figcaption class="how-picture-says">
+              <span class="how-bubble">Say each sound, then push them together. F, o, x. Fox!</span>
+              <span class="how-tiles how-tiles-read"><span>f</span><span>o</span><span>x</span></span>
+            </figcaption>
+          </figure>
+          <!-- 03 Practice: the wood path, the child's line from the app's band 3 story, read word by word. -->
+          <figure class="how-picture" data-step="3" style="--scene: url(../assets/guides/scene-woodpath.webp)">
+            <img class="how-picture-guide" src="assets/guides/rabbit.webp" alt="" width="345" height="640" loading="lazy">
+            <figcaption class="how-picture-says">
+              <span class="how-bubble">A fox and a hen, and only one box. Read on.</span>
+              <span class="how-line"><span class="is-read">A</span> <span class="is-read">fox</span> <span class="is-read">sat</span> <span class="is-next">in</span> <span>a</span> <span>box.</span></span>
+            </figcaption>
+          </figure>
+          <!-- 04 Talk about it: the story beat and the one question, from the app's prompt bank. -->
+          <figure class="how-picture" data-step="4" style="--scene: url(../assets/guides/scene-woodpath.webp)">
+            <img class="how-picture-guide" src="assets/guides/rabbit.webp" alt="" width="345" height="640" loading="lazy">
+            <figcaption class="how-picture-says">
+              <span class="how-bubble">What do you think the fox and the hen will do now?</span>
+              <span class="how-tag">Never scored</span>
+            </figcaption>
+          </figure>
+          <!-- 05 Writing: the stream, the swallow's coda line and letter tiles. -->
+          <figure class="how-picture" data-step="5" style="--scene: url(../assets/guides/scene-stream.webp)">
+            <img class="how-picture-guide" src="assets/guides/swallow.webp" alt="" width="488" height="640" loading="lazy">
+            <figcaption class="how-picture-says">
+              <span class="how-bubble">Before we go, let’s write some of what we just read.</span>
+              <span class="how-tiles"><span>b</span><span>o</span><span>x</span></span>
+            </figcaption>
+          </figure>
+          <!-- 06 The close: camp at night, the rank ring. -->
+          <figure class="how-picture" data-step="6" style="--scene: url(../assets/guides/scene-camp-night.webp)">
+            <figcaption class="how-picture-says how-picture-close">
+              <span class="how-rank"><svg viewBox="0 0 48 48"><circle class="how-rank-track" cx="24" cy="24" r="21"/><circle class="how-rank-fill" cx="24" cy="24" r="21" pathLength="1"/></svg><span>7</span></span>
+              <span class="how-bubble">That was good reading. Come back tomorrow and we’ll keep going.</span>
+            </figcaption>
+          </figure>
+        </div>
+
+        <ol class="how-rows">
+          <li class="how-row is-open" data-step="1">
+            <h3><button type="button" class="how-row-btn" aria-expanded="true" aria-controls="row-1"><span class="how-num">01</span><span class="how-row-title">A warm-up</span><span class="how-row-mark" aria-hidden="true"></span></button></h3>
+            <div class="how-row-body" id="row-1">
+              <div><p>Two or three things from days or weeks ago, picked from your child’s own history, so nothing they learned fades.</p><span class="how-row-bar" aria-hidden="true"></span></div>
+            </div>
+          </li>
+          <li class="how-row" data-step="2">
+            <h3><button type="button" class="how-row-btn" aria-expanded="false" aria-controls="row-2"><span class="how-num">02</span><span class="how-row-title">Something new</span><span class="how-row-mark" aria-hidden="true"></span></button></h3>
+            <div class="how-row-body" id="row-2">
+              <div><p>One new idea, shown and said aloud by the guide. Only one, so there is room to practise it.</p><span class="how-row-bar" aria-hidden="true"></span></div>
+            </div>
+          </li>
+          <li class="how-row" data-step="3">
+            <h3><button type="button" class="how-row-btn" aria-expanded="false" aria-controls="row-3"><span class="how-num">03</span><span class="how-row-title">Practice that is the game</span><span class="how-row-mark" aria-hidden="true"></span></button></h3>
+            <div class="how-row-body" id="row-3">
+              <div><p>The story moves only while your child reads it aloud, a word at a time. On math days, they slide in exactly the right number of acorns.</p><span class="how-row-bar" aria-hidden="true"></span></div>
+            </div>
+          </li>
+          <li class="how-row" data-step="4">
+            <h3><button type="button" class="how-row-btn" aria-expanded="false" aria-controls="row-4"><span class="how-num">04</span><span class="how-row-title">Talk about it</span><span class="how-row-mark" aria-hidden="true"></span></button></h3>
+            <div class="how-row-body" id="row-4">
+              <div><p>The guide asks one question about the story, and listens. It isn’t a quiz, and the answer is never scored.</p><span class="how-row-bar" aria-hidden="true"></span></div>
+            </div>
+          </li>
+          <li class="how-row" data-step="5">
+            <h3><button type="button" class="how-row-btn" aria-expanded="false" aria-controls="row-5"><span class="how-num">05</span><span class="how-row-title">Writing, on reading days</span><span class="how-row-mark" aria-hidden="true"></span></button></h3>
+            <div class="how-row-body" id="row-5">
+              <div><p>The swallow asks for words from the story they just read. A word is easiest to spell right after reading it.</p><span class="how-row-bar" aria-hidden="true"></span></div>
+            </div>
+          </li>
+          <li class="how-row" data-step="6">
+            <h3><button type="button" class="how-row-btn" aria-expanded="false" aria-controls="row-6"><span class="how-num">06</span><span class="how-row-title">The close</span><span class="how-row-mark" aria-hidden="true"></span></button></h3>
+            <div class="how-row-body" id="row-6">
+              <div><p>Camp turns to night. If your child mastered something, their rank moves. If not, tomorrow picks up where today left off.</p><span class="how-row-bar" aria-hidden="true"></span></div>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 3. ONE A DAY, ON PURPOSE ===================== -->
+  <!-- Camp at night, the app's home once today's session is done. Says the
+     app's daily rhythm as a choice, with the reason (the three-day rule in the
+     next section). No minutes anywhere: the founder, 2026-11-20. -->
+  <section class="how-day" id="rhythm" aria-labelledby="day-title">
+    <div class="how-wrap">
+      <div class="how-night" data-reveal>
+        <div class="how-night-copy">
+          <p class="how-eyebrow how-eyebrow-night"><span class="how-eyebrow-mark" aria-hidden="true"><svg viewBox="1958.1 -789.3 197.8 267.3"><use href="#how-spark"/></svg></span>The rhythm</p>
+          <h2 class="how-title" id="day-title"><span>One session a day,</span> <span>on purpose.</span></h2>
+          <p class="how-lede">When today’s session is done, camp turns to night and the rabbit naps by the fire. No bonus round, and nothing to collect for coming back.</p>
+        </div>
+      </div>
+
+      <ul class="how-points how-points-3">
+        <li data-reveal style="--d: 0">
+          <h3>Reading and math take turns</h3>
+          <p>Whichever day you come back, it’s the other one’s turn. Writing rides along on reading days.</p>
+          <span class="how-faces" aria-hidden="true"><img src="assets/guides/avatar-rabbit.webp" alt="" width="144" height="144"><img src="assets/guides/avatar-squirrel.webp" alt="" width="144" height="144"><img src="assets/guides/avatar-swallow.webp" alt="" width="144" height="144"></span>
+        </li>
+        <li data-reveal style="--d: 0.08">
+          <h3>Ilumi picks the subject</h3>
+          <p>Your child never has to choose, so the subject they like less still gets its turn.</p>
+        </li>
+        <li data-reveal style="--d: 0.16">
+          <h3>Want more? Do it together</h3>
+          <p>Your report suggests one thing to try away from the screen. “I spy something that starts with <span class="how-sound">/m/</span>.”</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===================== 4. MOVING UP ===================== -->
+  <!-- The mastery rule and review, drawn as three good days filling a step on
+     the homepage curriculum section's path. -->
+  <section class="how-up" id="moving-up" aria-labelledby="up-title">
+    <div class="how-wrap how-up-grid">
+      <header class="how-head" data-reveal>
+        <p class="how-eyebrow"><span class="how-eyebrow-mark" aria-hidden="true"><svg viewBox="1958.1 -789.3 197.8 267.3"><use href="#how-spark"/></svg></span>Moving up</p>
+        <h2 class="how-title" id="up-title"><span>Three good days,</span> <span>then the next step.</span></h2>
+        <p class="how-lede">A step counts as learned when your child has shown it in three sessions, on three different days. Not one lucky afternoon.</p>
+      </header>
+
+      <div class="how-climb" aria-hidden="true" data-reveal>
+        <div class="how-climb-days">
+          <span class="how-day-chip"><span class="how-day-dot"></span>First session</span>
+          <span class="how-day-chip"><span class="how-day-dot"></span>A good day</span>
+          <span class="how-day-chip"><span class="how-day-dot"></span>Another good day</span>
+        </div>
+        <div class="how-climb-path">
+          <span class="how-climb-step is-done"></span>
+          <span class="how-climb-step is-here"><svg class="how-climb-spark" viewBox="1958.1 -789.3 197.8 267.3"><use href="#how-spark"/></svg></span>
+          <span class="how-climb-step"></span>
+          <span class="how-climb-step"></span>
+        </div>
+        <div class="how-climb-names"><span>Three-letter words</span><span>sh and ch</span><span>Two consonants in a row</span><span>Long vowels, like cake</span></div>
+      </div>
+
+      <ul class="how-points how-points-2">
+        <li data-reveal style="--d: 0">
+          <h3>Old steps come back</h3>
+          <p>What they’ve learned returns in the warm-up: soon after, then days later, then weeks. If one has slipped, it goes back into practice.</p>
+        </li>
+        <li data-reveal style="--d: 0.06">
+          <h3>Never for showing up</h3>
+          <p>Their rank grows only when they master something. Days in a row, and time spent, earn nothing.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===================== 5. WHEN THEY GET STUCK ===================== -->
+  <!-- A panel of night, as the homepage's why section is. One card per guide,
+     each with that guide's real lines in order, then the repeated mix-up. -->
+  <section class="how-stuck" id="stuck" aria-labelledby="stuck-title">
+    <div class="how-panel" data-reveal>
+      <div class="how-panel-inner">
+        <header class="how-head how-head-center">
+          <p class="how-eyebrow how-eyebrow-night"><span class="how-eyebrow-mark" aria-hidden="true"><svg viewBox="1958.1 -789.3 197.8 267.3"><use href="#how-spark"/></svg></span>When it’s hard</p>
+          <h2 class="how-title" id="stuck-title"><span>Nobody marks it wrong.</span> <span>The guide helps.</span></h2>
+          <p class="how-lede">No red X, no buzzer, no score. When something doesn’t come, the guide shows the right way, and your child tries again.</p>
+        </header>
+
+        <ul class="how-helps">
+          <li class="how-help" style="--accent: #e8503a">
+            <p class="how-help-tag"><img src="assets/guides/avatar-rabbit.webp" alt="" width="144" height="144">Reading, with the rabbit</p>
+            <ol class="how-help-lines">
+              <li><span class="how-help-when">First</span><span class="how-help-says">“That one’s a tricky word. Take your time, I’m still here. Try sounding it out.”</span></li>
+              <li><span class="how-help-when">Then</span><span class="how-help-says">“Let’s read it together: pup.”</span></li>
+            </ol>
+            <p class="how-help-note">The story carries on. The word is kept as one they had help with, not one they read.</p>
+          </li>
+          <li class="how-help" style="--accent: #f2b01e">
+            <p class="how-help-tag"><img src="assets/guides/avatar-squirrel.webp" alt="" width="144" height="144">Math, with the squirrel</p>
+            <ol class="how-help-lines">
+              <li><span class="how-help-when">First</span><span class="how-help-says">“Let’s count them in together: one, two, three, four, five. Your turn.”</span></li>
+              <li><span class="how-help-when">Then</span><span class="how-help-says">“Here’s another one. Take your time.”</span></li>
+            </ol>
+            <p class="how-help-note">The next one is a little smaller, with the counters showing. The answer is always theirs to make, never picked from a list.</p>
+          </li>
+          <li class="how-help" style="--accent: #6f9ae6">
+            <p class="how-help-tag"><img src="assets/guides/avatar-swallow.webp" alt="" width="144" height="144">Writing, with the swallow</p>
+            <ol class="how-help-lines">
+              <li><span class="how-help-when">First</span><span class="how-help-says">“You got /f/ and /sh/.”</span></li>
+              <li><span class="how-help-when">Then</span><span class="how-help-says">“In ‘fish’, that sound is written I. Watch me.”</span></li>
+            </ol>
+            <p class="how-help-note">It names what they got right before it shows what was missing. Spelling by sound is a step on the way, not a mistake.</p>
+          </li>
+        </ul>
+
+        <div class="how-pattern">
+          <div class="how-pattern-copy">
+            <h3>And when the same mix-up keeps coming back</h3>
+            <p>Once is noise. If your child keeps reading “ship” as “sip”, on more than one day, Ilumi notices, and the next words are pairs that differ by just that sound. They are never told what they keep missing. They just get the practice for it.</p>
+          </div>
+          <ul class="how-pairs" aria-label="Example pairs">
+            <li><span>ship</span><span>sip</span></li>
+            <li><span>shop</span><span>sop</span></li>
+            <li><span>shell</span><span>sell</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 6. WHO SEES WHAT ===================== -->
+  <section class="how-views" id="views" aria-labelledby="views-title">
+    <div class="how-wrap">
+      <header class="how-head how-head-center" data-reveal>
+        <p class="how-eyebrow"><span class="how-eyebrow-mark" aria-hidden="true"><svg viewBox="1958.1 -789.3 197.8 267.3"><use href="#how-spark"/></svg></span>Two views</p>
+        <h2 class="how-title" id="views-title"><span>What your child sees.</span> <span>What you see.</span></h2>
+      </header>
+
+      <div class="how-view-grid">
+        <article class="how-view how-view-child" data-reveal style="--d: 0">
+          <div class="how-view-art"><img src="assets/how/camp-day.webp" alt="" width="1400" height="933" loading="lazy"></div>
+          <div class="how-view-text">
+            <h3>Your child</h3>
+            <ul class="how-list">
+              <li>Camp at the Big Tree, and three guides who speak every instruction</li>
+              <li>Stories that move when they read</li>
+              <li>A character of their own, and a rank that grows when they master something</li>
+            </ul>
+            <p class="how-never"><span>Never</span> scores, red marks, a clock, streaks, notifications or ads.</p>
+          </div>
+        </article>
+
+        <article class="how-view how-view-you" data-reveal style="--d: 0.1">
+          <!-- Parent mode's Progress tab, drawn small: rings are steps the first
+               session credited, filled dots steps earned in lessons, the large
+               one where the child is now (docs/design/PARENT_PROGRESS_UI.md). -->
+          <div class="how-view-art how-progress" aria-hidden="true">
+            <p class="how-progress-label"><img src="assets/guides/avatar-rabbit.webp" alt="" width="144" height="144">Reading</p>
+            <div class="how-progress-path">
+              <span class="is-placed"></span><span class="is-placed is-start"><em>Started here</em></span><span class="is-done"></span><span class="is-done"></span><span class="is-now"></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <p class="how-progress-foot">Steps show what’s next, not a comparison to other children.</p>
+          </div>
+          <div class="how-view-text">
+            <h3>You, behind a grown-up gate</h3>
+            <p class="how-view-sub">A sum a six-year-old can’t do opens it.</p>
+            <ul class="how-list">
+              <li>Where your child started, in plain words</li>
+              <li>A report you can check any time, with one thing to try together</li>
+              <li>The lines of your curriculum each step covers</li>
+              <li>Settings, including deleting everything</li>
+            </ul>
+            <p class="how-never"><span>Reminders</span> come to you, never to your child.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 7. CLOSE ===================== -->
+  <!-- The homepage's waitlist, pointed at rather than repeated: the form lives
+     there (initWaitlist in js/main.js), and one list has one form. -->
+  <section class="how-end" id="join" aria-labelledby="end-title">
+    <div class="how-wrap how-head-center" data-reveal>
+      <p class="how-eyebrow"><span class="how-eyebrow-mark" aria-hidden="true"><svg viewBox="1958.1 -789.3 197.8 267.3"><use href="#how-spark"/></svg></span>Founding families</p>
+      <h2 class="how-title" id="end-title">Save your child a place.</h2>
+      <p class="how-lede">We’re inviting founding families first.</p>
+      <div class="how-end-actions">
+        <a href="index.html#waitlist" class="btn-ink">Join the waitlist<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+        <a href="index.html#faq" class="how-link">Read the questions</a>
+      </div>
+    </div>
+    <img class="how-end-art" src="assets/waitlist/place.webp" alt="" width="1504" height="880" loading="lazy">
+  </section>
+</main>
+
+<script src="js/main.js"></script>
+<script src="js/how.js"></script>
+</body>
+</html>

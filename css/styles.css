@@ -1,0 +1,2531 @@
+/* ==========================================================================
+   Ilumi — homepage styles
+   Ported 1:1 from the reference site's design tokens (Tailwind + custom CSS).
+   Fonts: EB Garamond (serif) + Inter (sans) via Google Fonts (see index.html).
+   ========================================================================== */
+
+/* ---------- Design tokens ---------- */
+:root {
+  color-scheme: light;
+
+  --font-sans: "Inter", "Inter Fallback", -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  --font-serif: "EB Garamond", "EB Garamond Fallback", Georgia, serif;
+
+  --color-gold: #e9b638;
+  --color-navy: #1e2846;
+  --color-navy-soft: #2b3a63;
+  --color-sage: #a3bd82;
+  --color-ink: #1a1a1a;
+  --color-ink-soft: #3a3628;
+  --color-ink-deep: #2a2620;
+  --color-cream: #f2efe3;
+  --color-cream-warm: #ece7d7;
+  --color-paper: #f5f1e8;
+  --color-muted: #6b6558;
+
+  --ink-rgb: 74 65 42;
+  --glass-rgb: 255 252 245;
+  --hero-caption-shadow: 0 1px 8px #14100a2e;
+  --hero-subtitle-shadow: none;
+
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Dark tokens kept for later (no toggle wired yet). Add class="dark" to <html>. */
+.dark {
+  color-scheme: dark;
+  --color-ink: #f4f1e6;
+  --color-ink-soft: #e8e4d2;
+  --color-ink-deep: #f7f4e8;
+  --color-cream: #0f1420;
+  --color-cream-warm: #1a2133;
+  --color-paper: #232b3f;
+  --color-muted: #9aa1b4;
+  --ink-rgb: 222 216 198;
+  --glass-rgb: 34 44 68;
+  --hero-caption-shadow: 0 0 2px #0c0a06e6, 0 0 4px #0c0a06d9, 0 1px 3px #0c0a06cc, 0 2px 14px #0c0a0699, 0 0 28px #0c0a0673;
+  --hero-subtitle-shadow: var(--hero-caption-shadow);
+}
+
+/* ---------- Reset (subset of Tailwind preflight) ---------- */
+*, ::before, ::after { box-sizing: border-box; border: 0 solid; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; line-height: 1.5; scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+html, body { min-height: 100vh; margin: 0; }
+h1, h2, h3, h4, h5, h6 { font-size: inherit; font-weight: inherit; }
+a { color: inherit; text-decoration: inherit; }
+img, svg, video { display: block; vertical-align: middle; }
+img, video { max-width: 100%; height: auto; }
+button, input { font: inherit; letter-spacing: inherit; color: inherit; background-color: transparent; border-radius: 0; }
+button { cursor: pointer; }
+ol, ul { list-style: none; }
+
+body {
+  color: var(--color-ink-soft);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: transparent;
+  background-image:
+    radial-gradient(62% 55% at 4% 104%, #92bc6238, #0000 62%),
+    radial-gradient(50% 46% at 98% 8%, #edbd4533, #0000 66%),
+    radial-gradient(66% 44% at 50% -8%, #8ebfd724, #0000 60%),
+    radial-gradient(54% 50% at 88% 96%, #6db08f24, #0000 64%),
+    linear-gradient(168deg, #f7edd7 0%, #f0e1c4 55%, #ecdcb9 100%);
+  background-attachment: fixed;
+}
+
+/* ---------- Shared surfaces ---------- */
+.vellum-field {
+  overflow-x: clip;
+  background-color: transparent;
+  background-image:
+    radial-gradient(62% 55% at 4% 104%, #92bc6238, #0000 62%),
+    radial-gradient(50% 46% at 98% 8%, #edbd4533, #0000 66%),
+    radial-gradient(66% 44% at 50% -8%, #8ebfd724, #0000 60%),
+    radial-gradient(54% 50% at 88% 96%, #6db08f24, #0000 64%),
+    linear-gradient(168deg, #f7edd7 0%, #f0e1c4 55%, #ecdcb9 100%);
+  background-attachment: fixed;
+}
+
+.glass-chip {
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
+  backdrop-filter: blur(12px) saturate(130%);
+  background: linear-gradient(150deg, #fffdfaa8, #fcf6ea80);
+  border: 1px solid #ffffffbf;
+  box-shadow: inset 0 1px #ffffffb3, 0 0 0 0.5px #16304f0d, 0 6px 16px -8px #16304f47;
+}
+.glass-chip:hover { background: linear-gradient(150deg, #fffdfacc, #fcf6eaa3); }
+
+.nav-glass {
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  backdrop-filter: blur(22px) saturate(140%);
+  background: linear-gradient(150deg, #fffdf9e6, #faf4e9d6);
+  border: 1px solid #fffc;
+  box-shadow: inset 0 1px #fffc, 0 0 0 0.5px #16304f0f, 0 24px 50px -22px #16304f66;
+}
+
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .glass-chip { background: #fffdfaf7; }
+  .nav-glass { background: #fffdf9fa; }
+}
+
+/* ---------- Header / nav ----------
+   One fixed header (markup at the top of index.html). Over the hero, for the
+   whole of its scroll story, it is a clear, full-width bar. When the white
+   guides section arrives under it (js/main.js adds .is-scrolled) it closes into
+   a floating glass pill: narrower, tighter, dropped from the top edge, with the
+   secondary actions folding away.
+
+   The behaviour, the sizes and the timing follow the reference header
+   (verrity.framer.website): 1408px bar with 20px 64px of padding, an 800px pill
+   with 6px of padding 14px from the top, a 48px call to action, 40px links, and
+   0.6s on cubic-bezier(.22, 1, .36, 1). The surface, type and colours are Ilumi's
+   own (.nav-glass, .glass-chip, .btn-ink).
+
+   Under 1200px the row is always pill-shaped, holding the logo and a menu
+   button, and only its glass fades in on scroll. The button opens a full-screen
+   drawer (.nav-drawer). */
+.site-header {
+  --nav-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --nav-time: 0.6s;
+  --nav-item-h: 48px;  /* the row is as tall as its call to action */
+  --logo-h: 76px;      /* the logo art has clear space round it, so it is drawn taller than the row and overhangs */
+  position: absolute;   /* without JS it stays at the top of the page as the plain bar */
+  top: 0; left: 0; right: 0;
+  z-index: 60;
+  pointer-events: none; /* only the row and the open drawer take clicks */
+}
+.site-header.is-fixed { position: fixed; } /* set by initNav, which also drives .is-scrolled */
+.site-header.is-scrolled { --logo-h: 62px; }
+
+.nav-row {
+  position: relative;
+  isolation: isolate;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: min(100vw, 1408px);
+  margin: 0 auto;
+  padding: 20px 64px;
+  border-radius: 999px;
+  transition:
+    max-width var(--nav-time) var(--nav-ease),
+    padding var(--nav-time) var(--nav-ease),
+    margin var(--nav-time) var(--nav-ease);
+}
+.is-scrolled .nav-row { max-width: min(800px, 100vw - 32px); margin-top: 14px; padding: 6px; }
+
+/* The pill's glass: a layer of its own so it can fade in under the row's contents. */
+.nav-surface {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  /* .nav-glass, with a hairline so the pill keeps an edge over the white sections */
+  box-shadow: inset 0 1px #fffc, 0 0 0 1px rgb(22 48 79 / 0.07), 0 16px 40px -16px rgb(22 48 79 / 0.34);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--nav-time) var(--nav-ease);
+}
+.is-scrolled .nav-surface { opacity: 1; }
+.is-menu-open .nav-surface { opacity: 0; }
+
+/* Logo and actions take equal shares either side, which keeps the links centred. */
+.nav-logo { display: flex; flex: 1 0 0; align-items: center; justify-content: flex-start; }
+.logo-link {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  border-radius: 999px;
+  color: var(--color-ink-soft);
+  text-decoration: none;
+  transition: margin var(--nav-time) var(--nav-ease);
+}
+.logo-link img {
+  display: block;
+  width: auto;
+  max-width: none;
+  height: var(--logo-h);
+  margin: calc((var(--nav-item-h) - var(--logo-h)) / 2) 0; /* overhang, so the row keeps its height */
+  transition: height var(--nav-time) var(--nav-ease), margin var(--nav-time) var(--nav-ease);
+}
+.is-scrolled .logo-link { margin-left: 6px; }
+
+.nav-links { display: flex; flex: none; align-items: center; gap: 4px; }
+.nav-link {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
+  white-space: nowrap;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 500;
+  color: rgb(58 54 40 / 0.8);
+  text-decoration: none;
+  transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.nav-link:hover { color: var(--color-ink-soft); }
+.nav-link svg { transition: transform 0.2s; }
+.nav-link[aria-expanded="true"] svg { transform: rotate(180deg); }
+.site-header :is(a, button):focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
+/* initJumps moves focus to the section it brings the reader to; the section itself shows no ring. */
+:is(#waitlist, #faq)[tabindex="-1"]:focus { outline: none; }
+
+/* min-width: when the window is too narrow for equal shares, the actions keep
+   their full width and the links sit a little left of centre instead. */
+.nav-actions { display: flex; flex: 1 0 0; min-width: max-content; align-items: center; justify-content: flex-end; }
+
+.btn-glass {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 999px;
+  white-space: nowrap;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.2;
+  font-weight: 500;
+  color: var(--color-ink-soft);
+  text-decoration: none;
+  transition: transform 250ms var(--ease-spring);
+  will-change: transform;
+}
+.btn-glass:hover { transform: scale(1.04); }
+.btn-glass:active { transform: scale(0.96); }
+
+.btn-ink {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 48px;
+  padding: 0 22px 0 24px;
+  border-radius: 999px;
+  background: var(--color-ink);
+  white-space: nowrap;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.2;
+  font-weight: 500;
+  color: var(--color-cream);
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(26, 26, 26, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  transition: transform 250ms var(--ease-spring), filter 0.2s;
+  will-change: transform;
+}
+.btn-ink:hover { filter: brightness(1.1); }
+.btn-ink:active { transform: scale(0.96); }
+
+/* The call to action's hover: the label rolls up to a copy of itself and the
+   arrow is pushed out by a second one coming in from the left. */
+.roll { display: block; height: 1.2em; overflow: hidden; }
+.roll-track { display: flex; flex-direction: column; transition: transform 0.45s var(--nav-ease); }
+.roll-arrow { display: block; width: 16px; height: 16px; overflow: hidden; }
+.roll-arrow-track { display: flex; width: 32px; transform: translateX(-16px); transition: transform 0.45s var(--nav-ease); }
+@media (hover: hover) {
+  .nav-cta:hover .roll-track { transform: translateY(-50%); }
+  .nav-cta:hover .roll-arrow-track { transform: none; }
+}
+
+.menu-btn {
+  display: none;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  color: var(--color-ink-soft);
+  transition: transform 0.15s;
+}
+.menu-btn:active { transform: scale(0.95); }
+.menu-btn .menu-icon-close,
+.menu-btn[aria-expanded="true"] .menu-icon-open { display: none; }
+.menu-btn[aria-expanded="true"] .menu-icon-close { display: block; }
+
+/* The drawer sits under the row (z -1 inside the header), so the logo and the
+   menu button stay where they are while it is open. */
+.nav-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  display: none;
+  height: 100vh;
+  height: 100dvh;
+  padding: 94px 20px 32px; /* the row (62px) and 32px under it */
+  overflow-y: auto;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.45s var(--nav-ease), visibility 0s linear 0.45s;
+}
+.is-menu-open .nav-drawer { pointer-events: auto; opacity: 1; visibility: visible; transition: opacity 0.45s var(--nav-ease), visibility 0s; }
+.nav-drawer-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 40px;
+  width: 100%;
+  max-width: 900px;
+  min-height: 100%;
+  margin: 0 auto;
+  transform: translateY(12px);
+  transition: transform 0.45s var(--nav-ease);
+}
+.is-menu-open .nav-drawer-inner { transform: none; }
+.nav-drawer-links { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 0 16px; }
+.nav-drawer-links a, .nav-drawer-links button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 8px;
+  font-family: var(--font-serif);
+  font-size: 44px;
+  line-height: 1.15;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--color-ink-soft);
+  text-align: left;
+  text-decoration: none;
+}
+.nav-drawer-links svg { width: 0.42em; height: 0.42em; margin-top: 0.12em; opacity: 0.55; }
+.nav-drawer-cta { display: flex; flex-direction: column; gap: 10px; }
+.nav-drawer-cta .btn-glass, .nav-drawer-cta .btn-ink { width: 100%; height: 48px; }
+
+@media (max-width: 1199px) {
+  .site-header, .site-header.is-scrolled { --nav-item-h: 44px; --logo-h: 56px; }
+  .site-header { padding: 10px 20px 0; }
+  .nav-row, .is-scrolled .nav-row { max-width: 900px; margin-top: 0; padding: 4px 4px 4px 10px; }
+  .is-scrolled .logo-link { margin-left: 0; }
+  .nav-links, .nav-cta { display: none; }
+  .menu-btn { display: flex; }
+  .nav-drawer { display: block; }
+}
+@media (max-width: 809px) {
+  .nav-row, .is-scrolled .nav-row, .nav-drawer-inner { max-width: 500px; }
+  .nav-drawer-links a, .nav-drawer-links button { font-size: 34px; }
+}
+
+/* No animation on the first frame (a reload part-way down the page starts as
+   the pill), and none for people who ask for less motion. */
+.site-header.is-instant, .site-header.is-instant * { transition: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .site-header, .site-header * { transition-duration: 0.01s !important; transition-delay: 0s !important; }
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  min-height: 177.78vw;
+  flex-direction: column;
+  overflow: hidden;
+  padding-top: 108px; /* the header is fixed now; this is the room it took when it sat in the hero, so the copy stays put */
+}
+@media (min-width: 640px) { .hero { min-height: 100vh; } }
+
+.hero-bg { position: absolute; inset: 0; z-index: -10; }
+.hero-bg img {
+  pointer-events: none;
+  height: 100%;
+  width: 100%;
+  -webkit-user-select: none;
+  user-select: none;
+  object-fit: cover;
+  object-position: 50% 40%;
+}
+.hero-art-fade {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(180deg, #f2efe300 88%, var(--color-cream) 100%);
+}
+@media (max-width: 640px) {
+  .hero-art-fade { background-image: linear-gradient(180deg, #f2efe300 72%, var(--color-cream) 100%); }
+}
+
+.hero-content {
+  margin: 0 auto;
+  display: flex;
+  width: 100%;
+  max-width: 1100px;
+  flex: 1 1 0%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  padding: 16px 24px 64px;
+}
+@media (min-width: 640px) { .hero-content { gap: 40px; padding-top: 0; padding-bottom: 176px; } }
+
+/* Reveal (framer-motion port): fade + rise 16px */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: reveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.reveal-delay { animation-delay: 0.15s; }
+@keyframes reveal { to { opacity: 1; transform: none; } }
+
+.hero-type { width: 100%; }
+
+.hero-title-block {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  text-shadow: 0 1px 6px rgba(20, 16, 10, 0.22);
+  gap: 24px;
+  overflow: visible;
+}
+@media (max-width: 680px) { .hero-title-block { gap: 16px; } }
+
+.hero-badge {
+  color: var(--color-ink-soft);
+  font-family: var(--font-sans);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  border-radius: 100px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding: 8px 16px;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-decoration: none;
+  transition: color 0.2s;
+  display: inline-flex;
+}
+a.hero-badge:hover { color: var(--color-gold); }
+a.hero-badge:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
+.hero-badge-dot { background: var(--color-gold); border-radius: 50%; flex-shrink: 0; width: 7px; height: 7px; }
+@media (max-width: 680px) {
+  .hero-badge { white-space: normal; text-align: center; gap: 7px; max-width: 88vw; margin-bottom: 4px; padding: 7px 14px; font-size: 13px; }
+}
+
+.hero-headline {
+  font-family: var(--font-serif);
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-align: center;
+  color: var(--color-ink-soft);
+  margin: 0 auto;
+  padding: 0 4px;
+  transition: color 0.6s ease;
+}
+.hero-headline .line {
+  display: block;
+  white-space: nowrap;
+  font-size: clamp(22px, 5.9vw, 68px);
+}
+.hero-headline .accent { color: var(--color-gold); }
+
+.hero-subtitle {
+  font-family: var(--font-serif);
+  font-size: 21px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-ink-soft);
+  opacity: 0.9;
+  margin: 0;
+  text-align: center;
+  padding: 0 20px;
+  max-width: 600px;
+  letter-spacing: 0.01em;
+  text-shadow: var(--hero-subtitle-shadow);
+  transition: color 0.6s ease;
+}
+@media (max-width: 680px) { .hero-subtitle { font-size: 16px; } }
+
+/* ---------- URL input ---------- */
+.url-wrap { width: 100%; max-width: 560px; }
+.url-stack {
+  background: transparent;
+  font-family: var(--font-sans);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  position: relative;
+}
+.url-outer { position: relative; width: 100%; max-width: 560px; align-self: center; }
+
+.url-glass {
+  position: relative;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.58) 0%, rgba(255, 255, 255, 0.34) 100%);
+  -webkit-backdrop-filter: blur(36px) saturate(2) brightness(1.05);
+  backdrop-filter: blur(36px) saturate(2) brightness(1.05);
+  border-radius: 20px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 -10px 22px -14px rgba(255, 255, 255, 0.5) inset,
+    0 24px 64px rgba(60, 50, 30, 0.24),
+    0 6px 18px rgba(60, 50, 30, 0.13);
+  border: 0.5px solid rgba(255, 255, 255, 0.7);
+  width: 100%;
+  overflow: hidden;
+  min-height: 68px;
+  transition: backdrop-filter 0.6s ease, box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.url-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 0.5px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.05) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.url-glass:focus-within {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 -10px 22px -14px rgba(255, 255, 255, 0.5) inset,
+    0 24px 64px rgba(60, 50, 30, 0.26),
+    0 6px 18px rgba(60, 50, 30, 0.14),
+    0 0 0 4px rgba(233, 182, 56, 0.16);
+}
+.url-glass.is-error { animation: url-shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
+@keyframes url-shake {
+  0% { transform: translateX(0) scale(1); }
+  15% { transform: translateX(-6px) scale(0.99); }
+  30% { transform: translateX(6px) scale(1.005); }
+  45% { transform: translateX(-3px) scale(1); }
+  60% { transform: translateX(3px) scale(1); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+.url-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 20px;
+  padding-right: 8px;
+  height: 68px;
+  animation: url-enter 0.2s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+@keyframes url-enter { from { opacity: 0; } to { opacity: 1; } }
+
+.url-input {
+  flex: 1 1 0%;
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 400;
+  color: #1a1a1a;
+  letter-spacing: -0.011em;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: color 0.6s ease;
+}
+.url-input:focus { outline: none; }
+.url-input::placeholder { color: rgba(26, 26, 26, 0.32); }
+.url-input::selection { background: #e9b63840; }
+
+.url-btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  height: 48px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding-left: 18px;
+  padding-right: 14px;
+  background-color: #1a1a1a;
+  background-image: linear-gradient(180deg, #1a1a1a 0%, #1a1a1ae8 100%);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(26, 26, 26, 0.18), 0 1px 0 rgba(255, 255, 255, 0.15) inset;
+  transform: scale(1);
+  filter: brightness(1);
+  transition: transform 0.25s var(--ease-spring), box-shadow 0.25s ease, filter 0.2s ease, background-color 0.6s ease;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  outline: none;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+}
+.url-btn:hover { transform: scale(1.04); filter: brightness(1.1); box-shadow: 0 4px 14px rgba(26, 26, 26, 0.24), 0 1px 0 rgba(255, 255, 255, 0.15) inset; }
+.url-btn:active { transform: scale(0.96); }
+.url-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(115deg, transparent 0%, transparent 30%, rgba(255,255,255,0) 40%, rgba(255,255,255,0.28) 50%, rgba(255,255,255,0) 60%, transparent 70%, transparent 100%);
+  transform: skewX(-18deg);
+  pointer-events: none;
+  animation: url-btn-shine 7s ease-in-out infinite;
+  animation-delay: 2.5s;
+}
+.url-btn:hover::after, .url-btn:active::after { animation-play-state: paused; opacity: 0; }
+@keyframes url-btn-shine { 0% { left: -150%; } 19% { left: 150%; } 100% { left: 150%; } }
+
+/* Standalone waitlist CTA — same ink treatment as .url-btn, sized to stand alone */
+.waitlist-btn {
+  display: inline-flex;
+  height: 60px;
+  padding-left: 30px;
+  padding-right: 26px;
+  gap: 8px;
+  border-radius: 18px;
+  font-size: 17px;
+  text-decoration: none;
+  box-shadow: 0 10px 28px rgba(60, 50, 30, 0.22), 0 2px 8px rgba(26, 26, 26, 0.18), 0 1px 0 rgba(255, 255, 255, 0.15) inset;
+}
+.waitlist-btn:hover { box-shadow: 0 14px 34px rgba(60, 50, 30, 0.26), 0 4px 14px rgba(26, 26, 26, 0.24), 0 1px 0 rgba(255, 255, 255, 0.15) inset; }
+.waitlist-btn:focus-visible { box-shadow: 0 10px 28px rgba(60, 50, 30, 0.22), 0 0 0 4px rgba(233, 182, 56, 0.35); }
+
+.url-error {
+  display: none;
+  margin: 8px 4px 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: #b3261e;
+  text-align: center;
+  animation: url-error-enter 0.25s ease both;
+}
+.url-error.is-visible { display: block; }
+@keyframes url-error-enter { from { opacity: 0; transform: translateY(-2px); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 480px) {
+  .url-row { padding-left: 16px; padding-right: 6px; }
+  .url-input { font-size: 16px; }
+  .url-btn { padding-left: 14px; padding-right: 12px; font-size: 14px; }
+  .waitlist-btn { height: 56px; padding-left: 26px; padding-right: 22px; font-size: 16px; }
+}
+
+/* ---------- Hero sequence (pinned scroll story) ----------
+   Without JS, with reduced motion, or on very short screens this is a plain
+   block of sentences under the hero. js/main.js adds .is-scrolly to pin
+   the hero and scrub the animation; the scroll distances live there (SEQ). */
+.manifesto {
+  margin: 0 auto;
+  display: grid;
+  justify-items: center;
+  gap: 56px;
+  padding: 72px 24px 96px;
+  text-align: center;
+}
+@media (min-width: 640px) { .manifesto { gap: 72px; padding-top: 96px; padding-bottom: 128px; } }
+
+/* Type matches the reference heading: EB Garamond 500 upright, 64px / 1.05, -1.28px.
+   The column is 17.5em so "We’re building Ilumi, a tutor that remembers" (about 17em)
+   holds as one line, the break falling where the <br> puts it; on windows too
+   narrow for that at 64px the type scales down rather than re-wrapping. */
+.manifesto-panel {
+  display: grid;
+  justify-items: center;
+  gap: 0.42em;
+  font-family: var(--font-serif);
+  font-style: normal;
+  font-weight: 500;
+  font-size: min(64px, calc((100vw - 48px) / 17.5));
+  line-height: 1.05;
+  --tracking: -1.28px;
+  letter-spacing: var(--tracking);
+  color: var(--color-ink-soft);
+}
+.manifesto-line { max-width: 17.5em; margin: 0; text-wrap: balance; perspective: 9.14em; }
+@media (max-width: 767px) {
+  .manifesto-panel { font-size: clamp(40px, 11vw, 48px); --tracking: -0.8px; }
+  .manifesto-line { max-width: 440px; }
+}
+
+/* The wordmark stands in for the word "Ilumi". It is that word set in this
+   same EB Garamond 500 (the i's dot swapped for the spark), so at 1000 units
+   per em it shares the sentence's baseline, size and spacing exactly.
+   The outline is inlined once in index.html (#ilumi-wordmark-glyphs) and
+   drawn with <use>; its viewBox spans the word's advance width (2187.71
+   units) and from the spark's top (-790) to the u's foot (+20). The letters
+   are filled with currentColor so they take the text colour, dark mode too;
+   the spark is its own path, in the hero accent's gold. main.js cuts it
+   into one piece per letter (cut at each letter's advance) so it unfurls with
+   the rest of the sentence; each piece takes the tracking as a margin, as a
+   letter does. Without JS it shows whole. */
+.wordmark,
+.wordmark-glyph {
+  display: inline-block;
+  height: 0.81em;
+  vertical-align: -0.02em;
+  fill: currentColor;
+  overflow: hidden;
+}
+.wordmark { width: 2.18771em; }
+.wordmark-glyph { margin-right: var(--tracking, 0); }
+/* --spark-show is how the firefly hides this spark while it stands in for it
+   (.has-firefly, below): the pieces are drawn with <use>, where a selector
+   cannot see the page's ancestors, but an inherited property gets through. */
+.wordmark-spark { fill: var(--color-gold); opacity: var(--spark-show, 1); }
+
+/* Per-character pieces, built by main.js. The readable sentence stays in .visually-hidden. */
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; border: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+.reveal-copy, .reveal-line { display: block; }
+.reveal-word { display: inline-block; white-space: nowrap; }
+.reveal-char { display: inline-block; transform-origin: 50% 100%; }
+
+.hero-sequence.is-scrolly {
+  position: relative;
+  height: calc(100vh + var(--seq-travel, 185) * 1vh);
+  height: calc(100svh + var(--seq-travel, 185) * 1svh);
+}
+.is-scrolly .hero-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+/* The sticky stage is the stacking context now; the sentences (z 6) sit over the hero. */
+.is-scrolly .hero { isolation: auto; height: 100%; min-height: 0; }
+.is-scrolly .manifesto {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  place-items: center;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.is-scrolly .manifesto-panel { position: absolute; width: min(100%, 1170px); padding: 24px; }
+.is-scrolly .hero-bg img,
+.is-scrolly .hero-content,
+.is-scrolly .manifesto-panel,
+.is-scrolly .reveal-char { will-change: transform, opacity; }
+
+/* ---------- The firefly ----------
+   The wordmark's gold spark, let loose (FIREFLY in js/main.js). While the
+   hero is pinned the spark in the word itself is hidden (.has-firefly on
+   <html>) and this one stands in for it: it comes in, circles the word, drops
+   onto the i as its dot, and fades out as the page moves on.
+
+   .firefly is fixed over the whole window, above both sections and under the
+   header, so the guides section scrolling up over the hero does not cover it. .firefly-fly is a
+   point that main.js moves along the flights; the star and its glow are
+   centred on it. Sizes are in --u, the px of one font unit of the sentence
+   (set by main.js), so the star is exactly the spark's size wherever the type
+   scales. The glow is slight on purpose and breathes slowly; that pulse is the
+   one thing here on a timer. .firefly-trail holds the two threads of light, a
+   short dash each that main.js runs along a flight's path. */
+.is-scrolly .hero-scene { position: relative; height: 100%; }
+.firefly, .hero-wash { display: none; }
+.has-firefly .firefly { display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 40; pointer-events: none; overflow: hidden; }
+.firefly-trail { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.firefly-trail path {
+  stroke: #fff3c4;
+  stroke-width: calc(var(--u, 0.064px) * 22);
+  stroke-linecap: round;
+  opacity: 0;
+  filter: drop-shadow(0 0 calc(var(--u, 0.064px) * 60) rgb(240 190 70 / 0.7));
+}
+/* The thread on the way down to the guides section: a touch heavier, with a
+   soft glow of its own, so it holds all the way to the heading. */
+.firefly-trail path + path {
+  stroke: #ffeeb0;
+  stroke-width: calc(var(--u, 0.064px) * 31);
+  filter: drop-shadow(0 0 calc(var(--u, 0.064px) * 70) rgb(240 186 60 / 0.85)) drop-shadow(0 0 calc(var(--u, 0.064px) * 180) rgb(255 214 110 / 0.5));
+}
+.firefly-fly { position: absolute; top: 0; left: 0; width: 0; height: 0; opacity: 0; will-change: transform, opacity; }
+.firefly-body { position: absolute; top: 0; left: 0; width: 0; height: 0; }
+.firefly-star {
+  position: absolute;
+  width: calc(var(--u, 0.064px) * 197.8);
+  height: calc(var(--u, 0.064px) * 267.3);
+  left: calc(var(--u, 0.064px) * -98.9);
+  top: calc(var(--u, 0.064px) * -133.65);
+  overflow: visible;
+  fill: var(--color-gold);
+  filter: drop-shadow(0 0 calc(var(--u, 0.064px) * 45) rgb(255 222 120 / 0.9));
+  will-change: transform;
+}
+.firefly-glow {
+  position: absolute;
+  width: calc(var(--u, 0.064px) * 1150);
+  height: calc(var(--u, 0.064px) * 1150);
+  left: calc(var(--u, 0.064px) * -575);
+  top: calc(var(--u, 0.064px) * -575);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(255 244 196 / 0.7), rgb(255 221 120 / 0.32) 34%, rgb(255 206 90 / 0.08) 62%, rgb(255 206 90 / 0));
+  animation: firefly-breathe 2.6s ease-in-out infinite alternate;
+}
+@keyframes firefly-breathe {
+  from { opacity: 0.6; transform: scale(0.88); }
+  to { opacity: 1; transform: scale(1.1); }
+}
+.has-firefly { --spark-show: 0; }
+
+/* The page moving on (main.js adds .is-handoff to the hero and the guides
+   section). The hero stays pinned as the ground: its sentence scrolls up and
+   blurs away and .hero-wash fades the painting to white. The guides section
+   starts one screen early, so it scrolls up over the pinned hero at the page's
+   own pace and reaches the top as the pin ends. Until then (.is-arriving) it
+   has no ground of its own, so the fading painting shows behind it, and its
+   copy fades in as it comes (--reveal, 0 to 1: how far up it has come).
+   With data-ground="world" the wash is a painting, not white: see "standing
+   in the world" at the end of this file. */
+.is-scrolly .hero-wash { display: block; position: absolute; inset: 0; z-index: 7; background: #fff; opacity: 0; pointer-events: none; will-change: opacity; }
+.guides.is-handoff { margin-top: -100vh; margin-top: -100svh; }
+.guides.is-handoff.is-arriving { background: transparent; }
+.guides.is-handoff .guides-inner { opacity: calc((var(--reveal, 1) - 0.08) * 2.4 * (1 - var(--cover, 0) * 2.2)); }
+
+/* ---------- Motion preferences ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .reveal { animation: none; opacity: 1; transform: none; }
+  .url-btn::after { animation: none; opacity: 0; }
+}
+
+/* ---------- One world, three guides ----------
+   A white section with its own type (EB Garamond for the heading, as in the
+   hero; Newsreader for card captions; Geist for text)
+   and black ink. The base styles here are the plain layout: three rows, each a
+   guide's copy beside its scene. js/main.js adds .is-scrolly on wide screens to
+   pin the section and turn the rows into one list on the left with the scenes
+   stacked on the right; scrolling picks the guide (GUIDES in main.js).
+
+   Each scene is a painting from the app with a card over it that plays that
+   strand's screen. The card's colours and shapes are the app's own
+   (src/domain/constants.ts in the app repo): canvas, ink, and one colour per
+   strand. The card as written in the HTML is a finished still, which is what
+   shows without JS or with reduced motion; main.js animates over it. */
+.guides {
+  --g-text: "Geist", var(--font-sans);
+  --g-display: "Newsreader", var(--font-serif);
+  --g-ink: #0a0a0a;
+  --g-muted: rgb(10 10 10 / 0.58);
+  --g-line: rgb(10 10 10 / 0.12);
+  --mock-canvas: #fdfbf7;
+  --mock-ink: #1c1a17;
+  --mock-coral: #e8503a;
+  --mock-blue: #2f6fd0;
+  --mock-amber: #f2b01e;
+  --mock-amber-text: #8a5a00;
+  --guides-nav-clear: 104px; /* room for the header pill while pinned: it ends 74px down */
+  position: relative;
+  background: #fff;
+  color: var(--g-ink);
+  font-family: var(--g-text);
+}
+.guide-reading { --accent: var(--mock-coral); --accent-text: var(--mock-coral); }
+.guide-writing { --accent: var(--mock-blue); --accent-text: var(--mock-blue); }
+.guide-math { --accent: var(--mock-amber); --accent-text: var(--mock-amber-text); }
+
+.guides-inner { margin: 0 auto; max-width: 1360px; padding: 72px 24px 40px; }
+@media (min-width: 640px) { .guides-inner { padding: 104px 40px 56px; } }
+
+.guides-head { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; margin-bottom: 48px; }
+.guides-title {
+  /* Same face as .hero-headline: EB Garamond 500, -0.02em. */
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(44px, 5.4vw, 76px);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+/* The two sentences under the heading: one paragraph in the heading's own face
+   set italic, in the heading's ink at 75%. From 700px each sentence is its own
+   line (the longer one fits the 480px list on one line); narrower, they run on
+   as one balanced paragraph. */
+.guides-lede {
+  color: rgb(10 10 10 / 0.75);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.35rem;
+  line-height: 1.45;
+  text-wrap: balance;
+}
+.guides-lede span { display: inline; }
+@media (min-width: 700px) { .guides-lede span { display: block; } }
+.guide-tab:focus-visible { outline: 2px solid var(--g-ink); outline-offset: 4px; border-radius: 12px; }
+
+.guide { display: grid; gap: 20px; margin-bottom: 48px; }
+@media (min-width: 900px) {
+  .guide { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: center; gap: clamp(48px, 6vw, 96px); }
+}
+
+.guide-step { border-top: 1px solid var(--g-line); }
+.guide-tab { display: flex; align-items: center; gap: 16px; width: 100%; padding: 20px 0; text-align: left; cursor: default; }
+.guide-icon { position: relative; flex: none; display: grid; place-items: center; width: 48px; height: 48px; }
+.guide-icon img { width: 40px; height: 40px; border-radius: 50%; background: #f1eee6; }
+.guide-ring { position: absolute; inset: 0; display: none; width: 100%; height: 100%; fill: none; transform: rotate(-90deg); }
+.guide-ring-track { stroke: var(--g-line); stroke-width: 1.5; }
+.guide-ring-fill { stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--p, 0)); }
+.guide-name { font-size: 20px; line-height: 1.3; font-weight: 500; letter-spacing: -0.012em; }
+.guide-body p { max-width: 31em; padding-bottom: 12px; color: var(--g-muted); font-size: 17px; line-height: 1.55; }
+
+/* The scene: painting, card, guide */
+.guide-visual {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  container-type: inline-size;
+  aspect-ratio: 1 / 1;
+  border-radius: 28px;
+  background: #e6e2d3;
+}
+.guide-visual::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgb(10 10 10 / 0.08); pointer-events: none; }
+.guide-scene { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-select: none; user-select: none; }
+.guide-card {
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  width: min(80%, 460px);
+  padding: 1.75em 1.6em 1.9em;
+  transform: translate(-50%, -50%);
+  border-radius: 1.5em;
+  border: 1px solid rgb(255 255 255 / 0.8);
+  background: rgb(253 251 247 / 0.9);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: 0 34px 60px -26px rgb(46 36 12 / 0.55), 0 2px 10px rgb(46 36 12 / 0.1);
+  color: var(--mock-ink);
+  font-size: clamp(11px, 2.7cqi, 16px);
+}
+.guide-figure {
+  position: absolute;
+  left: 4%;
+  bottom: 3%;
+  width: auto;
+  height: 33%;
+  filter: drop-shadow(0 10px 12px rgb(46 36 12 / 0.3));
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* The screens inside the card. Sizes are in em so they scale with the card. */
+.mock { display: grid; justify-items: center; gap: 1.15em; text-align: center; }
+.mock-caption {
+  display: grid;
+  align-items: center;
+  min-height: 2.6em;
+  font-family: var(--g-display);
+  font-size: 1.32em;
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+}
+.mock-caption-swap > * { grid-area: 1 / 1; }
+.mock-ask { opacity: 0; }
+
+/* Reading has no card. The story stands on the painting: the rabbit's words in
+   a small night-glass bubble beside it (its tight corner is the one nearest
+   the rabbit), and under them the one line that is the child's, on a strip of
+   the app's paper. The two spans of the bubble share one cell; the still shows
+   the rabbit's answer, with the line read and the lantern lit. */
+.guide-story {
+  position: absolute;
+  left: 25%;
+  right: 4%;
+  bottom: 17%;
+  color: #fdf9ee;
+  font-size: clamp(11px, 2.7cqi, 16px);
+}
+.mock-reading { justify-items: start; gap: 1em; text-align: left; }
+.mock-says {
+  display: grid;
+  align-items: center;
+  max-width: 20em;
+  padding: 0.62em 0.95em 0.7em;
+  border: 1px solid rgb(255 255 255 / 0.16);
+  border-radius: 1.05em 1.05em 1.05em 0.3em;
+  background: rgb(13 17 42 / 0.62);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+  backdrop-filter: blur(14px) saturate(130%);
+  box-shadow: 0 18px 34px -18px rgb(2 4 16 / 0.7);
+  font-family: var(--g-display);
+  font-size: 1.22em;
+  line-height: 1.32;
+  letter-spacing: -0.008em;
+  text-wrap: balance;
+}
+.mock-tell { opacity: 0; }
+.mock-turn { position: relative; display: grid; justify-items: start; gap: 0.5em; }
+/* The child reading the line: a round picture hung off the strip's lower right
+   corner, framed in the strip's own paper. .mock-turn is as wide as the strip,
+   so left and top 100% are that corner; the margins tuck the circle in until
+   its edge all but meets it. --child is its width. */
+.mock-child {
+  --child: 6.6em;
+  position: absolute;
+  left: 100%;
+  top: 100%;
+  width: var(--child);
+  height: var(--child);
+  margin: calc(var(--child) * -0.1) 0 0 calc(var(--child) * -0.1);
+  overflow: hidden;
+  border: 0.19em solid rgb(253 251 247 / 0.95);
+  border-radius: 50%;
+  background: #2a2118;
+  box-shadow: 0 0 0 1px rgb(2 4 16 / 0.18), 0 20px 36px -14px rgb(2 4 16 / 0.8), 0 2px 8px rgb(2 4 16 / 0.22);
+}
+/* The clip is the take with 48px of the wall above it and 24px either side
+   (smeared out from its edge rows, so there is room over his hair; see
+   README). The child sits right of centre and low in it. The clip is drawn
+   larger and moved so his face is in the middle of the circle (the top of
+   his hair goes past its edge): the translate is in the clip's own units,
+   before the scale (the point of the clip at the circle's centre is 50% minus
+   it), and keeps the clip's edges outside the circle. To leave room over his
+   hair instead, scale(1.21) translate(-1.9%, 4.5%). */
+.mock-child video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.257) translate(-7.6%, -10.2%);
+  pointer-events: none;
+}
+/* A small framed scene (phones) has no room beside the strip: the circle is
+   smaller and hangs under the strip's right end, and the story stands higher
+   to leave it room inside the frame. */
+@container (max-width: 430px) {
+  .guide-story { bottom: 25%; }
+  .mock-child { --child: 4.8em; left: auto; right: 0; margin: 0.45em -0.4em 0 0; }
+}
+.mock-turn-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  padding-left: 0.2em;
+  color: rgb(253 249 238 / 0.86);
+  font-size: max(0.7em, 9.5px);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 0 14px rgb(0 0 0 / 0.5);
+}
+/* The dot that says the app is listening. */
+.mock-ear { flex: none; width: 0.62em; height: 0.62em; border-radius: 50%; background: var(--mock-coral); }
+.mock-line {
+  display: flex;
+  gap: 0.36em;
+  padding: 0.26em 0.72em 0.32em;
+  border: 1px solid rgb(255 255 255 / 0.8);
+  border-radius: 0.5em;
+  background: rgb(253 251 247 / 0.95);
+  box-shadow: 0 20px 36px -18px rgb(2 4 16 / 0.75), 0 2px 8px rgb(2 4 16 / 0.18);
+  color: var(--mock-ink);
+  font-size: 2em;
+  line-height: 1.3;
+}
+/* A word holds the width of its bold form (the hidden ::after), so turning
+   bold as it is read never moves its neighbours. */
+.mock-word {
+  display: inline-grid;
+  justify-items: center;
+  color: var(--mock-ink);
+  font-weight: 400;
+  opacity: 0.35;
+}
+.mock-word::after { content: attr(data-w); height: 0; overflow: hidden; visibility: hidden; font-weight: 700; }
+.mock-word.is-read { color: var(--mock-coral); font-weight: 700; opacity: 1; }
+/* The framed scene (the white section): camp at night, with the lit lantern
+   and the flash of its catching laid over the painting, all three the same
+   size and place. In the world they are the section's own ground instead. */
+.guide-reading .guide-scene { object-position: 80% 50%; }
+.guide-scene-bloom { opacity: 0; }
+
+.mock-pad { width: 74%; height: auto; overflow: visible; }
+.mock-pad-frame { fill: var(--mock-canvas); stroke: var(--mock-ink); stroke-width: 3; }
+.mock-stroke { fill: none; stroke: var(--mock-blue); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1 2; }
+/* Writing swaps its caption like math, but its still is the swallow's ask
+   with the word written: the callback is the point of the scene. */
+.mock-writing .mock-ask { opacity: 1; }
+.mock-writing .mock-beat { opacity: 0; }
+.mock-target { color: var(--accent-text); font-weight: 500; }
+
+/* Math: a tray, a pile and Go, on the card. Everything on the bench is placed
+   in its own units, 100 wide and 66 tall. An acorn is a box 10 units square
+   whose bottom middle is its foot (--x, --y); the picture stands on that
+   point. The still is the end of the scene: five in the tray, two left in the
+   pile, the squirrel's answer, and the parent's note where Go was. */
+.mock-bench { position: relative; width: 84%; aspect-ratio: 100 / 66; }
+.mock-tray {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  top: 0;
+  height: 56%;
+  border: 0.19em solid var(--mock-ink);
+  border-radius: 1.1em;
+  background: var(--mock-canvas);
+}
+.mock-acorn {
+  position: absolute;
+  left: calc((var(--x) - 5) * 1%);
+  top: calc((var(--y) - 10) / 0.66 * 1%);
+  width: 10%;
+  aspect-ratio: 1;
+  pointer-events: none;
+}
+.mock-acorn img {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: auto;
+  height: 185%;
+  max-width: none;
+  translate: -50% 0;
+  -webkit-user-select: none;
+  user-select: none;
+}
+/* A tap on an acorn. */
+.mock-tap {
+  position: absolute;
+  left: calc(var(--x) * 1%);
+  top: calc(var(--y) / 0.66 * 1%);
+  width: 15%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--mock-ink);
+  translate: -50% -50%;
+  opacity: 0;
+}
+/* The count, as each acorn lands. */
+.mock-count {
+  position: absolute;
+  left: calc(var(--x) * 1%);
+  top: calc(var(--y) / 0.66 * 1%);
+  color: var(--mock-amber-text);
+  font-family: var(--g-display);
+  font-size: 1.05em;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  translate: -50% -50%;
+}
+/* Go and the parent's note share one place: the note comes up where Go was.
+   The note is a slip of paper, a little askew, and the only thing in the
+   scene the child never sees. */
+.mock-after { display: grid; justify-items: center; align-items: center; width: 100%; min-height: 5.6em; }
+.mock-after > * { grid-area: 1 / 1; }
+.mock-math .mock-btn { opacity: 0; }
+.mock-note {
+  max-width: 19em;
+  padding: 0.65em 0.95em 0.75em;
+  border-radius: 0.35em;
+  background: #fff6de;
+  box-shadow: 0 14px 26px -14px rgb(46 36 12 / 0.55), 0 1px 5px rgb(46 36 12 / 0.14);
+  color: var(--mock-ink);
+  text-align: left;
+  rotate: -1.2deg;
+}
+.mock-note-label {
+  display: block;
+  margin-bottom: 0.4em;
+  color: var(--mock-amber-text);
+  font-size: max(0.66em, 9.5px);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.mock-note p { font-size: 0.95em; line-height: 1.4; text-wrap: pretty; }
+
+.mock-btn {
+  padding: 0.5em 1.7em;
+  border: 0.18em solid var(--accent);
+  border-radius: 999px;
+  background: var(--mock-canvas);
+  color: var(--accent-text);
+  font-size: 1.12em;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+/* Pinned: one list on the left, the scenes stacked on the right. */
+.guides.is-scrolly { height: calc(100vh + (var(--guides-travel, 225) + var(--guides-cover)) * 1vh); height: calc(100svh + (var(--guides-travel, 225) + var(--guides-cover)) * 1svh); }
+
+/* The curriculum sheet comes up over the last painting, which holds still.
+   Pinned, the section is --guides-cover svh longer than its guides need, and
+   the sheet (.standards) is pulled up by that much, so for that last stretch
+   the stage stays put while the sheet rises from the bottom of the window to
+   the top of it. main.js measures how far it has come as --cover (0 to 1):
+   the copy lifts away and fades, and the painting pales towards the sheet's
+   paper (.guides-stage::after), so by the time the sheet's edge passes the
+   middle of the window there is little left for it to cut across. Set
+   --guides-cover to 0 and the sheet scrolls up with the painting again. */
+:root { --guides-cover: 100; }
+.is-scrolly .guides-inner { translate: 0 calc(var(--cover, 0) * -6vh); opacity: calc(1 - var(--cover, 0) * 2.2); }
+.is-scrolly .guides-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: #fbf6f0; /* .standards --s-paper */
+  opacity: calc(var(--cover, 0) * 0.6);
+  pointer-events: none;
+}
+.guides.is-scrolly + .standards { margin-top: calc(var(--guides-cover) * -1vh); margin-top: calc(var(--guides-cover) * -1svh); }
+.is-scrolly .guides-stage { position: sticky; top: 0; display: grid; align-items: center; height: 100vh; height: 100svh; padding: var(--guides-nav-clear) 0 32px; overflow: hidden; }
+.is-scrolly .guides-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  grid-template-rows: minmax(0, 1fr) auto auto auto;
+  column-gap: clamp(48px, 6vw, 96px);
+  width: 100%;
+  height: min(100%, 860px);
+  padding-top: 0;
+  padding-bottom: 0;
+}
+/* From 1200px the pinned layout takes the measurements of the reference's tour
+   section (verrity.framer.website): 1280px of content inside 64px margins, a
+   480px list (so its rules are 480px long), a 72px gap, and the scene in the
+   rest: 728px wide at full width, and 720px tall when the window has the room
+   (856px of height; shorter windows scale it down to fit under the header). */
+@media (min-width: 1200px) {
+  .is-scrolly .guides-inner {
+    grid-template-columns: 480px minmax(0, 1fr);
+    column-gap: 72px;
+    max-width: 1408px;
+    height: min(100%, 720px);
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+}
+/* The heading and its two sentences sit at the foot of the space above the
+   list, the text 48px clear of the list's first rule, as it is unpinned. The
+   auto margin takes the spare space, so a window too short to have any still
+   starts the heading at the top. */
+.is-scrolly .guides-head { grid-column: 1; grid-row: 1; margin-top: auto; margin-bottom: 0; padding-bottom: 48px; }
+.is-scrolly .guide { display: contents; }
+.is-scrolly .guide-step { grid-column: 1; }
+.is-scrolly .guide:nth-of-type(1) .guide-step { grid-row: 2; }
+.is-scrolly .guide:nth-of-type(2) .guide-step { grid-row: 3; }
+/* The last rule stops a little short of the scene's bottom edge, which lifts
+   the three rows off it. */
+.is-scrolly .guide:nth-of-type(3) .guide-step { grid-row: 4; border-bottom: 1px solid var(--g-line); margin-bottom: 20px; }
+
+/* The rows keep the reference's rhythm: 88px from rule to rule for a closed
+   row, 145px for the open one (its copy is two lines of 15px; it runs the full
+   480px, since the longest of the three needs that to stay on two lines).
+   That is 1px of rule, 20 + 48 + 7 for the tab, the copy when open, 12 under it. */
+.is-scrolly .guide-step { padding-bottom: 12px; }
+.is-scrolly .guide-tab { cursor: pointer; padding: 20px 0 7px; color: var(--g-muted); transition: color 0.35s ease; }
+.is-scrolly .guide-name { font-size: 17px; line-height: 1.35; }
+.is-scrolly .guide-tab:hover, .is-scrolly .guide.is-active .guide-tab { color: var(--g-ink); }
+.is-scrolly .guide-icon img { filter: saturate(0.2); opacity: 0.7; transition: filter 0.35s ease, opacity 0.35s ease; }
+.is-scrolly .guide.is-active .guide-icon img { filter: none; opacity: 1; }
+.is-scrolly .guide-ring { display: block; opacity: 0; transition: opacity 0.35s ease; }
+.is-scrolly .guide.is-active .guide-ring { opacity: 1; }
+.is-scrolly .guide-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.55s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.is-scrolly .guide-body > div { min-height: 0; overflow: hidden; }
+.is-scrolly .guide-body p { max-width: none; padding-bottom: 12px; font-size: 15px; line-height: 1.5; opacity: 0; transition: opacity 0.3s ease; }
+.is-scrolly .guide.is-active .guide-body { grid-template-rows: 1fr; }
+.is-scrolly .guide.is-active .guide-body p { opacity: 1; transition-delay: 0.12s; }
+
+.is-scrolly .guide-visual {
+  grid-column: 2;
+  grid-row: 1 / -1;
+  aspect-ratio: auto;
+  height: 100%;
+  border-radius: 32px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.6s ease, visibility 0s linear 0.6s;
+}
+.is-scrolly .guide.is-active .guide-visual { z-index: 1; opacity: 1; visibility: visible; transition: opacity 0.6s ease, visibility 0s; }
+.is-scrolly .guide-card { transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); transform: translate(-50%, calc(-50% + 14px)) scale(0.97); }
+.is-scrolly .guide.is-active .guide-card { transform: translate(-50%, -50%); }
+/* Pinned, the scene is tall: the story stands higher over the rabbit than in the small framed scene. */
+.is-scrolly .guide-story { bottom: 26%; transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); transform: translateY(14px); }
+.is-scrolly .guide.is-active .guide-story { transform: none; }
+.is-scrolly .guide-figure { transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); transform: translateY(10px); }
+.is-scrolly .guide.is-active .guide-figure { transform: none; }
+
+/* Short windows: the pinned list has to fit one screen, so the heading follows
+   the window's height and the rows close up. */
+.is-scrolly .guides-title { font-size: min(clamp(44px, 5.4vw, 76px), 8vh); }
+/* Under 1000px the pinned list is narrower than the longer sentence at full
+   size, so the text steps down to keep each sentence on one line. */
+@media (max-width: 999px) { .is-scrolly .guides-lede { font-size: 1.25rem; } }
+@media (max-height: 820px) {
+  .guides.is-scrolly { --guides-nav-clear: 96px; }
+  .is-scrolly .guides-stage { padding-bottom: 24px; }
+  .is-scrolly .guide-step { padding-bottom: 8px; }
+  .is-scrolly .guide-tab { padding: 13px 0 5px; }
+  .is-scrolly .guide-body p { padding-bottom: 8px; }
+}
+
+/* ---------- One world, three guides: standing in the world (trial) ----------
+   data-ground="world" on .guides (index.html) swaps the white ground for
+   paintings from the app that fill the whole window, one per guide: Camp at
+   night for reading, the Stream for writing, the Glade for math. Delete the
+   attribute and none of this applies; the section is the white one above.
+
+   - .guides-grounds holds the three paintings, stacked. main.js marks every
+     painting up to the current guide's .is-on, so a change is one painting
+     fading in or out over the one before it (GROUND-FADE below is its length).
+     Pinned, the stack fills the pinned stage; in the plain layout it sticks to
+     the window while the rows scroll over it.
+   - Each painting carries a shade in its own dark, heavier on the left where
+     the copy stands, and the copy is set in a warm white.
+   - The framed scene goes: the app's screen and the guide stand on the
+     painting itself.
+   - The hero hands over to the first painting, not to white: .hero-wash takes
+     the same picture and shade (--ground-reading), so when the section arrives
+     and shows its own, nothing changes on screen. The wash follows the scroll
+     at an even rate over the whole screen of travel (FIREFLY.washWorld in
+     main.js), as the two backgrounds at the top of
+     clearpath-template.framer.website do.
+
+   The pictures are exported by scripts/export-guides.py (ground-*.webp). */
+:root {
+  /* The shades are multiplied into the pictures (background-blend-mode, below),
+     so they darken like shadow and keep the paint's colour and contrast; white
+     in a shade leaves the picture as it is. Left to right: under the copy, at
+     the copy's right edge, clear of it. */
+  --ground-shade-reading: linear-gradient(90deg, rgb(74 78 108) 0%, rgb(122 126 160) 38%, rgb(226 228 244) 66%, rgb(226 228 244) 100%);
+  --ground-shade-writing: linear-gradient(90deg, rgb(80 86 62) 0%, rgb(108 116 88) 38%, rgb(236 238 226) 68%, rgb(236 238 226) 100%);
+  --ground-shade-math: var(--ground-shade-writing);
+  /* Shade over picture. The x position only matters where the window is
+     narrower than the picture's shape: it keeps the castle in view. */
+  --ground-reading-x: 66%;
+  --ground-reading-picture: url(../assets/guides/ground-camp-night.webp) var(--ground-reading-x) 50% / cover no-repeat #0b1030;
+  --ground-reading: var(--ground-shade-reading), var(--ground-reading-picture);
+  --ground-writing: var(--ground-shade-writing), url(../assets/guides/ground-stream.webp) 58% 50% / cover no-repeat #2c3418;
+  --ground-math: var(--ground-shade-math), url(../assets/guides/ground-glade.webp) 62% 50% / cover no-repeat #2c3418;
+}
+/* One column of copy over the whole picture: an even shade. */
+@media (max-width: 899px) {
+  :root {
+    --ground-shade-reading: linear-gradient(rgb(128 132 168), rgb(128 132 168));
+    --ground-shade-writing: linear-gradient(rgb(104 112 84), rgb(104 112 84));
+  }
+}
+
+.guides-grounds { display: none; }
+[data-ground="world"] .guides-grounds {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 0;
+  height: 100vh;
+  height: 100svh;
+  margin-bottom: -100vh;
+  margin-bottom: -100svh;
+  overflow: hidden;
+  pointer-events: none;
+}
+[data-ground="world"].is-scrolly .guides-grounds { position: absolute; inset: 0; height: auto; margin: 0; }
+/* GROUND-FADE: how long one painting takes to give way to the next. */
+.guides-ground { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s cubic-bezier(0.45, 0, 0.25, 1); will-change: opacity; }
+.guides-ground.is-on { opacity: 1; }
+.guides-ground, .has-world-ground .hero-wash { background-blend-mode: multiply, normal; }
+/* Reading's painting is built in parts, so the lantern the child lights can
+   come up inside it: the picture, the lit lantern (.guides-lit, the same size
+   and place as the picture), the flash as it catches (.guides-bloom), and the
+   shade multiplied over all three. It comes to the same picture as
+   --ground-reading, which .hero-wash still uses whole. */
+.guides-ground-reading { isolation: isolate; background: var(--ground-reading-picture); background-blend-mode: normal; }
+.guides-ground-reading::after { content: ""; position: absolute; inset: 0; background: var(--ground-shade-reading); mix-blend-mode: multiply; }
+.guides-lit, .guides-bloom { position: absolute; inset: 0; background: url(../assets/guides/ground-camp-lantern.webp) var(--ground-reading-x) 50% / cover no-repeat; }
+.guides-bloom { background-image: url(../assets/guides/lantern-bloom.svg); opacity: 0; }
+.guides-ground-writing { background: var(--ground-writing); }
+.guides-ground-math { background: var(--ground-math); }
+@media (prefers-reduced-motion: reduce) { .guides-ground { transition: none; } }
+
+.guides[data-ground="world"] {
+  --g-ink: #fdf9ee;
+  --g-muted: rgb(253 249 238 / 0.8);
+  --g-line: rgb(255 255 255 / 0.26);
+  background: #0b1030;
+}
+[data-ground="world"] .guides-inner { position: relative; z-index: 1; }
+[data-ground="world"] .guides-lede { color: rgb(253 249 238 / 0.88); }
+[data-ground="world"] :is(.guides-head, .guide-step) { text-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 0 22px rgb(0 0 0 / 0.38); }
+
+/* The app's screen and the guide stand on the painting, with no frame. */
+[data-ground="world"] .guide-visual { overflow: visible; border-radius: 0; background: none; }
+[data-ground="world"] .guide-visual::after,
+[data-ground="world"] .guide-scene { display: none; }
+/* Reading keeps its frame wherever the section is not pinned: there the
+   lantern the child lights can be outside a narrow window, or under the copy
+   scrolling over the painting, so the scene shows its own piece of the camp
+   with the lantern in it. Pinned, the lantern is in the painting behind. */
+[data-ground="world"]:not(.is-scrolly) .guide-reading .guide-visual { overflow: hidden; border-radius: 28px; background: #0b1030; }
+[data-ground="world"]:not(.is-scrolly) .guide-reading .guide-visual::after { display: block; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.16); }
+[data-ground="world"]:not(.is-scrolly) .guide-reading .guide-scene { display: block; }
+/* The rabbit is painted in daylight; at Camp it is night. */
+[data-ground="world"] .guide-reading .guide-figure { filter: brightness(0.8) saturate(0.84) drop-shadow(0 12px 14px rgb(4 6 20 / 0.5)); }
+
+/* The handover. The hero's wash is the first painting; the section shows its
+   own only once it has arrived, and its copy, now white, waits for the night
+   to be well in before it shows over the pale hero. */
+.has-world-ground .hero-wash { background: var(--ground-reading); }
+.guides[data-ground="world"].is-handoff.is-arriving .guides-grounds { visibility: hidden; }
+/* The section does not scroll up into place: it fades in where it will stand.
+   Until it has arrived its stage is held in the window, clear and out of the
+   way of clicks; main.js keeps its room in the page (holdRoom). Its copy
+   waits for the first half of the handover (--reveal, the wash's own measure):
+   by then the painting is half in and the hero's sentence has blurred away
+   (FIREFLY.out), so the two never show at once. Then it comes up over the
+   rest and stands just before the section arrives. */
+.guides[data-ground="world"].is-handoff.is-arriving .guides-stage { position: fixed; top: 0; left: 0; right: 0; pointer-events: none; }
+.guides[data-ground="world"].is-handoff .guides-inner { opacity: calc((var(--reveal, 1) - 0.5) * 2.2 * (1 - var(--cover, 0) * 2.2)); }
+
+/* The firefly in the world. Round the word it is as it always was. On the way
+   down it glows a little more (.firefly-halo, a second halo main.js adds and
+   brings up as it lifts off) and the light behind it is an aura, not a
+   thread: main.js draws that trail as three soft layers on one path
+   (FIREFLY.aura), a long faint tail, a middle and a short wider one round the
+   firefly, blurred until they read as one light thinning out behind it. */
+.firefly-halo {
+  position: absolute;
+  width: calc(var(--u, 0.064px) * 1500);
+  height: calc(var(--u, 0.064px) * 1500);
+  left: calc(var(--u, 0.064px) * -750);
+  top: calc(var(--u, 0.064px) * -750);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(255 240 190 / 0.3), rgb(255 222 128 / 0.14) 38%, rgb(255 210 100 / 0) 72%);
+  opacity: 0;
+}
+.has-world-ground .firefly-trail .firefly-aura { stroke: #ffdf94; stroke-width: calc(var(--u, 0.064px) * 110); filter: blur(calc(var(--u, 0.064px) * 95)); }
+.has-world-ground .firefly-trail .firefly-aura-2 { stroke-width: calc(var(--u, 0.064px) * 180); filter: blur(calc(var(--u, 0.064px) * 115)); }
+.has-world-ground .firefly-trail .firefly-aura-3 { stroke: #ffe8b0; stroke-width: calc(var(--u, 0.064px) * 260); filter: blur(calc(var(--u, 0.064px) * 135)); }
+
+/* ---------- Aligned to the curriculum ----------
+   The section under the guides: a sheet of the app's paper (its canvas,
+   #fdfbf7) that comes up over the last painting, round at its top corners.
+   The fit follows the "How it works" section of alphaos.framer.website
+   (measured at 1440: a centred serif heading, one quiet line 19px under it,
+   the visual 55px under that, then small captions): but there is one visual,
+   not three, and it has no frame. It stands on the paper.
+
+   The visual is the path a parent sees in the app's Progress tab, enlarged: a
+   dot for each step on a line, the grades the work sits in bracketed over it,
+   and under the current step a slip of paper (the math scene's note, again)
+   with what the step is and which standard it covers. The wordmark's spark
+   lights the steps. Two switches above it: reading, writing or math, and
+   which curriculum the codes come from.
+
+   Everything here is a state, not a timeline: main.js (initStandards) only
+   sets --at (the current step), a few classes and two attributes on the
+   section, and the transitions below do the moving. So a click on a switch
+   and the scene playing by itself go the same way. The markup is the finished
+   still; with reduced motion nothing here moves. */
+.standards {
+  --s-text: "Geist", var(--font-sans);
+  --s-display: "Newsreader", var(--font-serif);
+  --s-paper: #fbf6f0; /* trial, 2026-11-17: the founder's swatch. The app's canvas is #fdfbf7. */
+  --s-ink: #1c1a17;
+  --s-muted: rgb(28 26 23 / 0.62);
+  --s-line: rgb(28 26 23 / 0.13);
+  --s-slip: #fff6de;
+  --s-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --s-glide: cubic-bezier(0.45, 0, 0.2, 1);
+  position: relative;
+  z-index: 2;
+  margin-top: -32px;
+  border-radius: 32px 32px 0 0;
+  /* A soft shadow on the painting, so the sheet reads as paper lifted over it. */
+  box-shadow: 0 -18px 48px -14px rgb(16 20 8 / 0.32);
+  background: var(--s-paper);
+  color: var(--s-ink);
+  font-family: var(--s-text);
+}
+.standards-inner { margin: 0 auto; max-width: 1360px; padding: 88px 20px 80px; }
+@media (min-width: 640px) { .standards-inner { padding: clamp(104px, 8vw, 120px) 40px 96px; } }
+
+.standards-head { display: grid; justify-items: center; gap: 20px; margin: 0 auto; max-width: 820px; text-align: center; }
+.standards-title {
+  /* The guides heading's face, a size down: this one is centred and runs to two lines. */
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(36px, 4.5vw, 62px);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.standards-lede {
+  max-width: 34em;
+  color: rgb(28 26 23 / 0.75);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.35rem;
+  line-height: 1.45;
+  text-wrap: balance;
+}
+/* One sentence on two lines, a clause a line, each no wider than the heading
+   above it. Under 900px the two run together and wrap where they fall. */
+.standards-lede > span { display: inline; }
+@media (min-width: 900px) { .standards-lede > span { display: block; } }
+
+/* A grade's name in each curriculum's own words: Ontario says JK and SK where
+   the US says Pre-K and K. Both are in the markup; the brackets follow the
+   curriculum the codes are cited from (data-curriculum, so they change with
+   the switch). Without JS it is the US name. */
+.standards .cur-on { display: none; }
+.standards[data-curriculum="on"] .path .cur-us { display: none; }
+.standards[data-curriculum="on"] .path .cur-on { display: inline; }
+
+.standards-visual { margin: clamp(36px, 3.5vw, 48px) auto 0; max-width: 1180px; }
+
+/* The two switches. Each is a pill of --count equal parts and a white thumb
+   that slides under the chosen one, the --i'th; which one is read off the
+   section's data-subject and data-curriculum. */
+.standards-bar { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 16px; }
+.seg {
+  position: relative;
+  --count: 2;
+  --i: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--count), 1fr);
+  padding: 4px;
+  border-radius: 999px;
+  background: rgb(28 26 23 / 0.055);
+  box-shadow: inset 0 0 0 1px rgb(28 26 23 / 0.045);
+}
+.seg-thumb {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc((100% - 8px) / var(--count));
+  border-radius: 999px;
+  background: #fff;
+  transform: translateX(calc(var(--i) * 100%));
+  box-shadow: 0 1px 2px rgb(46 36 12 / 0.12), 0 8px 16px -10px rgb(46 36 12 / 0.4);
+  transition: transform 0.5s var(--s-ease);
+}
+.seg-subject { --count: 3; }
+[data-subject="writing"] .seg-subject, [data-curriculum="us"] .seg-curriculum { --i: 1; }
+[data-subject="math"] .seg-subject { --i: 2; }
+.seg-btn {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 18px;
+  border-radius: 999px;
+  color: var(--s-muted);
+  font-size: 14.5px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  transition: color 0.3s ease;
+}
+.seg-btn:disabled { cursor: default; }
+.seg-btn[aria-pressed="true"], .seg-btn:not(:disabled):hover { color: var(--s-ink); }
+.seg-btn:focus-visible { outline: 2px solid var(--s-ink); outline-offset: 2px; }
+.seg-subject .seg-btn { padding: 0 20px 0 7px; }
+.seg-btn img { flex: none; width: 28px; height: 28px; border-radius: 50%; background: #f1eee6; filter: saturate(0.2); opacity: 0.7; transition: filter 0.35s ease, opacity 0.35s ease; }
+.seg-btn[aria-pressed="true"] img { filter: none; opacity: 1; }
+@media (max-width: 420px) {
+  .seg-btn { gap: 6px; padding: 0 13px; font-size: 13.5px; }
+  .seg-subject .seg-btn { padding: 0 11px 0 5px; }
+  .seg-btn img { width: 24px; height: 24px; }
+}
+
+/* The three paths share one place; the subject's own is the one showing.
+   .is-faded is the scene's blink between one run and the next. --n is how
+   many steps the path has and --at the current one (0: none yet). .is-soon
+   in the markup styles nothing (see README.md). */
+.standards-paths { display: grid; margin-top: clamp(32px, 3vw, 40px); }
+.path {
+  --n: 12;
+  --at: 0;
+  --accent: #e8503a;
+  --accent-text: #b4371f;
+  --x: calc((max(var(--at), 1) - 0.5) / var(--n) * 100%); /* the current step's middle, across the path */
+  grid-area: 1 / 1;
+  position: relative;
+  min-width: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.45s ease, visibility 0s linear 0.45s;
+}
+.path-writing { --n: 12; --accent: #2f6fd0; --accent-text: #2459ad; }
+.path-math { --n: 13; --accent: #f2b01e; --accent-text: #8a5a00; }
+.path.is-on { visibility: visible; transition: opacity 0.45s ease, visibility 0s; }
+/* In is quicker than out: the path should be there as soon as it is looked for. */
+.path.is-on:not(.is-faded) { opacity: 1; transition: opacity 0.3s ease, visibility 0s; }
+.path.is-instant, .path.is-instant * { transition: none !important; }
+
+/* The grades, bracketed over the steps they cover. A bracket spans --span
+   steps. Narrower than 1260px (the path is at its full width from there, and
+   math's thirteen steps need all of it) the words give way to their short
+   forms. */
+.path-grades { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); margin-bottom: 30px; }
+.path-grade {
+  position: relative;
+  grid-column: span var(--span, 1);
+  padding-bottom: 13px;
+  color: rgb(28 26 23 / 0.55);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  line-height: 1.2;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.path-grade::after { content: ""; position: absolute; left: 6px; right: 6px; bottom: 0; height: 6px; border: 1px solid rgb(28 26 23 / 0.32); border-bottom: 0; border-radius: 3px 3px 0 0; }
+.path-grade-short { display: none; }
+@media (max-width: 1259px) {
+  .path-grade { font-size: 9.5px; letter-spacing: 0.04em; }
+  .path-grade::after { left: 3px; right: 3px; }
+  .path-grade-full { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .path-grade-short { display: inline; }
+}
+/* The narrowest phones: a step is about 22px wide, and JK–SK, K–1 and Gr 2
+   ran into the bracket beside them at 9.5px. */
+@media (max-width: 359px) {
+  .path-grade, .standards .path-math .path-grade { font-size: 8px; letter-spacing: 0; }
+}
+
+/* The line and its dots. The line runs from the first dot's middle to the
+   last one's, and draws itself (.is-drawn); the coloured part of it reaches
+   the current step. */
+.path-track { position: relative; }
+.path-line {
+  position: absolute;
+  top: 13px;
+  left: calc(50% / var(--n));
+  right: calc(50% / var(--n));
+  height: 2px;
+  border-radius: 1px;
+  background: var(--s-line);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  transition: transform 0.9s var(--s-glide);
+}
+.path.is-drawn .path-line { transform: scaleX(1); }
+.path-line-done {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--accent);
+  opacity: 0.7;
+  transform-origin: 0 50%;
+  transform: scaleX(calc(max(var(--at) - 1, 0) / (var(--n) - 1)));
+  transition: transform 0.55s var(--s-glide);
+}
+.path-steps { position: relative; display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); }
+.path-step { display: grid; justify-items: center; align-content: start; gap: 12px; min-width: 0; }
+.path-dot {
+  width: 14px;
+  height: 14px;
+  margin: 7px 0;
+  border: 1.5px solid rgb(28 26 23 / 0.26);
+  border-radius: 50%;
+  background: var(--s-paper);
+  transition: transform 0.5s var(--s-ease), background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.5s ease;
+}
+.path-step.is-done .path-dot { border-color: transparent; background: color-mix(in srgb, var(--accent) 62%, var(--s-paper)); }
+.path-step.is-current .path-dot { border-color: transparent; background: var(--accent); transform: scale(1.6); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 24%, transparent); }
+.path-label { padding: 0 6px; color: var(--s-ink); font-size: 12.5px; line-height: 1.3; text-align: center; text-wrap: balance; opacity: 0.42; transition: opacity 0.4s ease; }
+.path-step.is-done .path-label { opacity: 0.62; }
+.path-step.is-current .path-label { opacity: 1; }
+/* Thirteen steps: the labels a size down, so three lines are the most any takes. */
+.path-math .path-label { padding: 0 4px; font-size: 12px; }
+.path-math .path-grade { font-size: 10px; letter-spacing: 0.05em; }
+/* No room for the labels: they stay for screen readers only. */
+@media (max-width: 899px) {
+  .path-step { gap: 0; }
+  .path-label { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); }
+}
+
+/* The spark: the star over the i of the wordmark, as the firefly in the hero.
+   It hovers over the current step and glides to the next. */
+.path-spark { position: absolute; z-index: 2; top: 14px; left: var(--x); width: 0; height: 0; opacity: 0; pointer-events: none; transition: left 0.55s var(--s-glide), opacity 0.4s ease; }
+.path.is-lit .path-spark { opacity: 1; }
+.path-spark-body { position: absolute; left: 0; top: -31px; animation: path-spark-bob 2.6s ease-in-out infinite alternate; }
+.path-spark-glow { position: absolute; left: -24px; top: -24px; width: 48px; height: 48px; border-radius: 50%; background: radial-gradient(closest-side, rgb(255 226 140 / 0.75), rgb(255 214 110 / 0.3) 42%, rgb(255 206 90 / 0)); }
+.path-spark svg { position: absolute; left: -6.5px; top: -9px; width: 13px; height: 18px; overflow: visible; fill: var(--color-gold); filter: drop-shadow(0 0 1.5px rgb(176 120 10 / 0.5)); }
+@keyframes path-spark-bob { from { transform: translateY(1.5px); } to { transform: translateY(-2.5px); } }
+
+/* The slip under the current step, and the thread from the step down to it.
+   The slip keeps inside the path at either end; the thread stays under the
+   step. Its room is kept, so the captions below never move. */
+.path-note { position: relative; height: 180px; margin-top: 22px; }
+.path-tether { position: absolute; top: -12px; left: var(--x); width: 1px; height: 22px; background: var(--accent); opacity: 0; transition: left 0.55s var(--s-glide), opacity 0.35s ease; }
+.path.is-noted .path-tether { opacity: 0.55; }
+.path-slip {
+  --w: min(372px, 100%);
+  position: absolute;
+  top: 8px;
+  left: clamp(var(--w) / 2, var(--x), 100% - var(--w) / 2);
+  width: var(--w);
+  padding: 14px 18px 16px;
+  border-radius: 6px;
+  background: var(--s-slip);
+  box-shadow: 0 18px 30px -18px rgb(46 36 12 / 0.5), 0 1px 5px rgb(46 36 12 / 0.12);
+  translate: -50% 0;
+  rotate: -1.2deg;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: left 0.6s var(--s-glide), opacity 0.4s ease, transform 0.55s var(--s-ease);
+}
+.path.is-noted .path-slip { opacity: 1; transform: none; }
+.path-slip-label { display: block; margin-bottom: 6px; color: var(--accent-text); font-size: 10.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+.path-slip-says { font-family: var(--s-display); font-size: 19px; line-height: 1.3; letter-spacing: -0.01em; text-wrap: balance; }
+.path-slip-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 10px; color: rgb(28 26 23 / 0.78); font-size: 12.5px; line-height: 1.4; }
+.path-chip { padding: 2px 9px 3px; border-radius: 999px; background: color-mix(in srgb, var(--accent) 22%, var(--s-slip)); color: var(--s-ink); font-weight: 500; white-space: nowrap; }
+/* What it covers has a line to itself, under the grade. The codes are the
+   numbers of the lines in the curriculum; the word before them (standard,
+   expectation: each curriculum's own) says so. */
+.path-codes { flex-basis: 100%; }
+.path-code { color: var(--s-ink); font-weight: 500; font-variant-numeric: tabular-nums; letter-spacing: 0.01em; }
+/* What main.js swaps: each rolls out and its replacement rolls in. */
+[data-slip] { display: inline-block; }
+
+/* Three captions under the visual, as the reference has under its pictures. */
+.standards-points { display: grid; gap: 28px; margin: 40px auto 0; max-width: 1180px; }
+@media (min-width: 800px) { .standards-points { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; margin-top: 40px; } }
+.standards-point { padding-top: 20px; border-top: 1px solid var(--s-line); }
+.standards-point h3 { font-size: 18px; font-weight: 500; line-height: 1.35; letter-spacing: -0.012em; }
+.standards-point p { margin-top: 8px; max-width: 30em; color: var(--s-muted); font-size: 15px; line-height: 1.55; text-wrap: pretty; }
+.standards-fine { margin: 36px auto 0; max-width: 1180px; color: rgb(28 26 23 / 0.55); font-size: 13.5px; line-height: 1.5; text-align: center; text-wrap: balance; }
+.standards-fine a { color: var(--s-ink); text-decoration: underline; text-decoration-color: rgb(28 26 23 / 0.3); text-underline-offset: 3px; }
+.standards-fine a:hover { text-decoration-color: currentColor; }
+
+@media (prefers-reduced-motion: reduce) {
+  .standards *, .standards *::before, .standards *::after { transition: none !important; animation: none !important; }
+}
+
+/* ---------- The why ----------
+   The memory and the reasoning layer, as one section under the curriculum: a
+   dark panel set into the paper, the evening after the session. From 1000px
+   it is two columns that fit one window: on the left the note Ilumi writes
+   to the parent, a card on its own, centred; on the right the writing
+   (label, heading, lede) and four plain lines of text under it. Each row of
+   the note starts with the score a dashboard would keep, small and grey, and
+   then says why. Narrower, it is one column: the writing, the note, the four
+   lines.
+
+   The markup is the finished still. main.js (initWhy) adds .is-waiting while
+   the note is still below the window, and swaps it for .is-revealing when
+   it comes in: the note writes itself in a row at a time (--d, in seconds, on
+   each row), each row's count underlined as it lands. It plays once. Reduced
+   motion and no JS get the still. */
+.why {
+  --w-text: "Geist", var(--font-sans);
+  --w-display: "Newsreader", var(--font-serif);
+  --w-paper: #fbf6f0; /* the curriculum section's paper, which the panel is set into */
+  --w-night: #131a31;
+  --w-ink: #f6f0e3;
+  --w-muted: rgb(246 240 227 / 0.64);
+  --w-faint: rgb(246 240 227 / 0.52);
+  --w-line: rgb(246 240 227 / 0.13);
+  --w-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --w-inset: 8px; /* the paper left round the panel */
+  position: relative;
+  z-index: 2;
+  color: var(--w-ink);
+  font-family: var(--w-text);
+}
+@media (min-width: 640px) { .why { --w-inset: 16px; } }
+/* The stage: the paper the panel is set into. */
+.why-stage { padding: var(--w-inset); background: var(--w-paper); }
+
+/* The panel: night, a little lighter where the moon is. As the page scrolls
+   to it, it fades in and grows the last few percent into its place, from its
+   top edge (data-fade on it in index.html, initFades in main.js). */
+.why-panel {
+  display: grid;
+  transform-origin: 50% 0;
+  border-radius: 24px;
+  background:
+    radial-gradient(70% 90% at 12% 0%, rgb(92 116 196 / 0.2), rgb(92 116 196 / 0) 62%),
+    radial-gradient(60% 70% at 100% 100%, rgb(233 182 56 / 0.06), rgb(233 182 56 / 0) 66%),
+    linear-gradient(165deg, #1b2444 0%, var(--w-night) 62%, #0f1529 100%);
+}
+.why-panel { position: relative; }
+.why-inner { position: relative; z-index: 1; display: grid; gap: 32px; width: 100%; max-width: 1440px; margin: 0 auto; padding: 40px 20px 28px; }
+
+/* The birds: the app's two meadow birds, crossing the panel behind the
+   writing, left and right, each crossing at a height of its own. They are a
+   background: under everything in .why-inner (the note is solid, so a bird
+   goes out of sight behind it), dimmed for the night, and the far ones smaller and fainter (--dim,
+   per bird, from main.js). main.js (initWhyBirds) builds them, moves them and
+   swaps the two wing frames; with reduced motion or no JS the layer is empty. */
+.why-birds { position: absolute; inset: 0; z-index: 0; overflow: hidden; border-radius: inherit; pointer-events: none; }
+.why-bird { position: absolute; top: 0; left: 0; visibility: hidden; opacity: var(--dim, 0.7); filter: brightness(0.8) saturate(0.82); will-change: transform; }
+.why-bird img { display: block; width: 100%; height: auto; }
+.why-bird img + img { position: absolute; top: 0; left: 0; }
+.why-bird:not(.is-down) img + img, .why-bird.is-down img:first-child { visibility: hidden; }
+@media (min-width: 640px) {
+  .why-panel { border-radius: 30px; }
+  .why-inner { gap: 40px; padding: 56px 40px 40px; }
+}
+
+/* The writing. */
+.why-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 20px; color: var(--w-muted); font-size: 12.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; }
+.why-eyebrow-mark { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: rgb(233 182 56 / 0.14); box-shadow: inset 0 0 0 1px rgb(233 182 56 / 0.34); }
+.why-eyebrow-mark svg { width: 9px; height: 12px; fill: var(--color-gold); }
+.why-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(36px, 3.9vw, 64px);
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+}
+.why-title span { text-wrap: balance; }
+.why-lede {
+  max-width: 25em;
+  margin-top: 18px;
+  color: var(--w-muted);
+  font-family: var(--font-serif);
+  font-size: clamp(19px, 1.65vw, 23px);
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+  text-wrap: pretty;
+}
+
+/* Each subject's colour is its guide's, as on the curriculum's paths, lifted
+   to read on the night. */
+.why-reading { --accent: #ff8a70; }
+.why-math { --accent: #f4bd45; }
+.why-writing { --accent: #82b3ff; }
+.why-next { --accent: var(--color-gold); }
+
+/* The visual is the note alone: a card a shade lighter than the night, lit
+   along its top edge, with only the night behind it, and now and then a bird
+   (.why-birds, above). (It stood over a painting at first; the founder took
+   the painting out, 2026-11-17.) */
+.why-visual { position: relative; min-width: 0; }
+.why-note {
+  border-radius: 20px;
+  /* Solid, not glass: a bird flying behind the note must not show through it
+     (the founder, 2026-11-17). The second gradient is the panel's own night
+     where the note stands, so the card looks as it did when it was a veil. */
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.085) 0%, rgb(255 255 255 / 0.04) 100%),
+    linear-gradient(165deg, #1c2546 0%, #151c36 45%, #121930 100%);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1), inset 0 1px 0 rgb(255 255 255 / 0.14), 0 44px 70px -46px rgb(0 0 0 / 0.8);
+}
+.why-note-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 15px 18px 13px; }
+.why-note-label { font-family: var(--w-display); font-size: 17px; line-height: 1.3; letter-spacing: -0.01em; }
+.why-tag { flex: none; color: var(--w-faint); font-size: 12px; line-height: 1.4; }
+.why-row { display: grid; gap: 8px; padding: 13px 18px 15px; border-top: 1px solid var(--w-line); }
+.why-score { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.why-subject { display: inline-flex; align-items: center; gap: 8px; color: var(--accent); font-size: 12.5px; font-weight: 500; line-height: 1.5; }
+.why-subject::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.why-next .why-subject::before { display: none; }
+.why-subject svg { flex: none; width: 9px; height: 12px; fill: var(--color-gold); }
+.why-score-value { color: rgb(246 240 227 / 0.72); font-size: 19px; font-weight: 400; line-height: 1.2; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.why-score-value span { color: var(--w-faint); font-size: 0.72em; letter-spacing: 0; }
+.why-score-was { color: var(--w-faint); font-size: 11.5px; line-height: 1.35; }
+.why-says { font-family: var(--w-display); font-size: 16.5px; line-height: 1.4; letter-spacing: -0.005em; text-wrap: pretty; }
+/* The count in each line, the receipt, underlined in the subject's colour. */
+.why-note mark {
+  padding: 0 0.04em;
+  background: linear-gradient(color-mix(in srgb, var(--accent) 62%, transparent), color-mix(in srgb, var(--accent) 62%, transparent)) no-repeat 0 96% / 100% 1.5px;
+  color: inherit;
+}
+
+/* The four lines: plain text between hairlines. */
+.why-points li { display: grid; gap: 3px; padding: 12px 0 13px; border-top: 1px solid var(--w-line); }
+.why-points li:last-child { border-bottom: 1px solid var(--w-line); }
+.why-points h3 { font-family: var(--w-display); font-size: 18.5px; font-weight: 400; line-height: 1.25; letter-spacing: -0.012em; }
+.why-points p { color: var(--w-muted); font-size: 14px; line-height: 1.45; }
+
+@media (min-width: 560px) {
+  .why-note-head { padding: 19px 26px 17px; }
+  .why-note-label { font-size: 19px; }
+  .why-row { grid-template-columns: 108px minmax(0, 1fr); align-items: start; gap: 20px; padding: 16px 26px 18px; }
+  .why-score { flex-direction: column; flex-wrap: nowrap; gap: 3px; }
+  .why-score-value { font-size: 21px; }
+  .why-says { font-size: 17.5px; }
+}
+/* A line and what it means side by side, where the column has the room. */
+@media (min-width: 560px) and (max-width: 999px), (min-width: 1180px) {
+  .why-points li { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: baseline; gap: 20px; }
+}
+
+/* Wide: the note on the left, centred on the panel's height, the writing on
+   the right with the four lines under it, centred too, in a panel one window
+   tall. The line under the note hangs below it, out of the flow, so that it
+   is the card that is centred and not the card and its caption. The top
+   padding is the room the header's pill takes when the panel fills the
+   window. */
+@media (min-width: 1000px) {
+  .why-panel { min-height: min(100vh - 2 * var(--w-inset), 940px); min-height: min(100svh - 2 * var(--w-inset), 940px); }
+  .why-inner {
+    grid-template-columns: minmax(0, 1.14fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto auto minmax(0, 1fr);
+    gap: 0 clamp(40px, 5vw, 76px);
+    padding: 84px clamp(36px, 4.4vw, 64px) 32px;
+  }
+  .why-visual { grid-column: 1; grid-row: 1 / -1; align-self: center; }
+  .why-head { grid-column: 2; grid-row: 2; }
+  .why-points { grid-column: 2; grid-row: 3; margin-top: clamp(22px, 3.4vh, 40px); }
+  .why-title span { display: block; }
+}
+/* Where the two columns are narrow the note's lines wrap to three, so it is
+   set a size down. */
+@media (min-width: 1000px) and (max-width: 1179px) {
+  .why-note-head { padding: 15px 22px 13px; }
+  .why-note-label { font-size: 17.5px; }
+  .why-row { grid-template-columns: 100px minmax(0, 1fr); gap: 16px; padding: 12px 22px 14px; }
+  .why-score-value { font-size: 19px; }
+  .why-says { font-size: 16.5px; }
+}
+
+/* A short window (a laptop with its toolbars showing): the same layout drawn
+   tighter, so the panel still fits it whole. */
+@media (min-width: 1000px) and (max-height: 740px) {
+  .why-inner { padding-top: 80px; padding-bottom: 22px; }
+  .why-eyebrow { margin-bottom: 16px; }
+  .why-lede { margin-top: 14px; }
+  .why-points { margin-top: 18px; }
+  .why-points li { padding: 10px 0 11px; }
+  .why-note-head { padding-top: 14px; padding-bottom: 12px; }
+  .why-row { padding-top: 11px; padding-bottom: 13px; }
+}
+
+@media (min-width: 1400px) {
+  .why-note-head { padding: 22px 30px 20px; }
+  .why-note-label { font-size: 20px; }
+  .why-says { font-size: 18.5px; }
+  .why-row { grid-template-columns: 124px minmax(0, 1fr); gap: 22px; padding: 19px 30px 21px; }
+  .why-points h3 { font-size: 20px; }
+  .why-points p { font-size: 15px; }
+}
+
+/* The reveal. .is-waiting hides with no transition (so it is instant);
+   .is-revealing carries the transitions, so taking .is-waiting off with it
+   on plays them. */
+.why.is-waiting .why-note { opacity: 0; transform: translateY(14px); }
+.why.is-waiting .why-note-head,
+.why.is-waiting .why-row { opacity: 0; transform: translateY(8px); }
+.why.is-waiting .why-note mark { background-size: 0% 1.5px; }
+.why.is-revealing .why-note { transition: opacity 0.6s ease, transform 0.8s var(--w-ease); }
+.why.is-revealing .why-note-head { transition: opacity 0.5s ease 0.25s, transform 0.6s var(--w-ease) 0.25s; }
+.why.is-revealing .why-row { transition: opacity 0.6s ease calc(var(--d, 0) * 1s), transform 0.7s var(--w-ease) calc(var(--d, 0) * 1s); }
+.why.is-revealing .why-note mark { transition: background-size 0.7s var(--w-ease) calc(var(--d, 0) * 1s + 0.5s); }
+
+@media (prefers-reduced-motion: reduce) {
+  .why *, .why *::before, .why *::after { transition: none !important; animation: none !important; }
+}
+
+/* ---------- Grows ----------
+   "More than a tutor", under the why section: the morning after the note. A
+   painting of the child and the rabbit on a ledge high over the valley, set
+   into the paper as the why panel is, with the writing in its sky and two
+   strips of the app's paper in it (the rabbit's question, the child's
+   answer). Narrower than 1000px the painting is a picture and the writing
+   follows it on the paper.
+
+   The markup is the finished still. Where main.js (initGrows) pins the
+   section (.is-pinned here, .is-handing on the why section), this panel lies
+   exactly over the why panel and the two change over in place: the star
+   beside "The note" flies loose, the night (.grows-night) covers the why
+   panel's writing, and the star opens into a circle of light (a mask on
+   .grows-world, --cx, --cy and --r from main.js) that grows until the whole
+   painting stands. Reduced motion, phones, short windows and no JS get the
+   still, and none of the pinned rules below. */
+.grows {
+  --g-text: "Geist", var(--font-sans);
+  --g-display: "Newsreader", var(--font-serif);
+  --g-paper: #fbf6f0; /* the paper the panel is set into, as the why panel's is */
+  --g-ink: var(--color-ink-deep);
+  --g-muted: rgb(42 38 32 / 0.76);
+  --g-line: rgb(42 38 32 / 0.17);
+  --g-inset: 8px;
+  position: relative;
+  z-index: 3; /* over the why section, which it lies on while pinned */
+  color: var(--g-ink);
+  font-family: var(--g-text);
+}
+@media (min-width: 640px) { .grows { --g-inset: 16px; } }
+.grows-stage { padding: var(--g-inset); background: var(--g-paper); }
+.grows-panel { position: relative; display: grid; transform-origin: 50% 0; border-radius: 24px; }
+.grows-world { position: relative; z-index: 1; display: grid; min-width: 0; }
+/* Built and shown by main.js only, where the section is pinned. */
+.grows-night, .grows-rim, .grows-trail, .grows-fly { display: none; }
+
+/* The painting. Its box is a size container, so the two strips can be placed
+   on the painting itself (--u and --v, shares of its width and height)
+   however the box crops it. The crop keeps the left edge (object-position). */
+.grows-visual { position: relative; container-type: size; aspect-ratio: 3 / 2; overflow: hidden; border-radius: 24px; background: #f4ecd0; }
+.grows-painting { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: 0% 70%; }
+.grows-veil { display: none; }
+/* The two strips. In the small picture (narrower than 1000px) they stand one
+   under the other in the sky beside the two of them; in the wide panel each
+   stands over its speaker (below). */
+.grows-says {
+  --iw: 177.78cqh; --ih: 100cqh; --oy: 0px; /* the painting as drawn: its width, its height, how far down it starts */
+  position: absolute;
+  top: calc(var(--oy) + var(--ih) * 0.08);
+  left: calc(var(--iw) * 0.4);
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+}
+@container (min-aspect-ratio: 16 / 9) {
+  .grows-says { --iw: 100cqw; --ih: 56.25cqw; --oy: calc((100cqh - 56.25cqw) * 0.7); }
+}
+.grows-say {
+  padding: 0.46em 0.8em 0.52em;
+  border: 1px solid rgb(255 255 255 / 0.8);
+  border-radius: 0.62em;
+  background: rgb(253 251 247 / 0.96);
+  box-shadow: 0 1px 2px rgb(60 50 20 / 0.1), 0 12px 26px -12px rgb(60 50 20 / 0.4);
+  color: var(--g-ink);
+  font-family: var(--g-display);
+  font-size: clamp(12.5px, 3.3cqw, 17px);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.grows-say span { display: block; margin-bottom: 0.14em; color: rgb(42 38 32 / 0.58); font-family: var(--g-text); font-size: max(9px, 0.57em); font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; }
+/* A picture under 330px wide (a 320px phone): the rabbit's question ran off
+   the picture's right edge. The strips stop short of it and may wrap. */
+@container (max-width: 330px) {
+  .grows-says { right: 10px; }
+  .grows-say { white-space: normal; }
+}
+.grows-say mark { background: linear-gradient(var(--color-gold), var(--color-gold)) no-repeat 0 96% / 100% 2px; color: inherit; }
+
+/* The writing. */
+.grows-inner { padding: 30px 12px 36px; }
+.grows-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 20px; color: var(--g-muted); font-size: 12.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; }
+.grows-eyebrow-mark { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: rgb(233 182 56 / 0.2); box-shadow: inset 0 0 0 1px rgb(233 182 56 / 0.5); }
+.grows-eyebrow-mark svg { width: 9px; height: 12px; fill: var(--color-gold); }
+.grows-title { font-family: var(--font-serif); font-weight: 500; font-size: clamp(34px, 3.7vw, 60px); line-height: 1.04; letter-spacing: -0.025em; text-wrap: balance; }
+.grows-lede { max-width: 25em; margin-top: 18px; color: var(--g-muted); font-family: var(--font-serif); font-size: clamp(19px, 1.65vw, 23px); line-height: 1.3; letter-spacing: -0.005em; text-wrap: pretty; }
+/* The lines: plain text between hairlines, as in the why section. */
+.grows-points { margin-top: 26px; }
+.grows-points li { display: grid; gap: 3px; padding: 12px 0 13px; border-top: 1px solid var(--g-line); }
+.grows-points li:last-child { border-bottom: 1px solid var(--g-line); }
+.grows-points h3 { font-family: var(--g-display); font-size: 18.5px; font-weight: 400; line-height: 1.25; letter-spacing: -0.012em; }
+.grows-points p { color: var(--g-muted); font-size: 14px; line-height: 1.45; text-wrap: pretty; }
+.grows-more { display: inline-block; margin-top: 22px; color: var(--g-ink); font-size: 14.5px; font-weight: 500; text-decoration: underline; text-decoration-color: rgb(42 38 32 / 0.35); text-underline-offset: 4px; }
+.grows-more:hover { text-decoration-color: currentColor; }
+
+@media (min-width: 560px) {
+  .grows-inner { padding: 36px 24px 44px; }
+}
+@media (min-width: 560px) and (max-width: 999px), (min-width: 1180px) {
+  .grows-points li { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: baseline; gap: 20px; }
+}
+
+/* Wide: the painting fills a panel one window tall and the writing stands in
+   its sky, on the right, over a pale wash of the painting's own light
+   (.grows-veil). The top padding is the room the header's pill takes. */
+@media (min-width: 1000px) {
+  .grows-panel { overflow: hidden; min-height: min(100vh - 2 * var(--g-inset), 940px); min-height: min(100svh - 2 * var(--g-inset), 940px); border-radius: 30px; }
+  .grows-visual { position: absolute; inset: 0; aspect-ratio: auto; border-radius: 0; }
+  /* Each strip over its speaker: --u and --v are shares of the painting's
+     width and height. The rabbit's is centred on the rabbit, so it keeps
+     clear of the writing in a narrow panel. */
+  .grows-says { inset: 0; display: block; }
+  .grows-say { position: absolute; top: calc(var(--oy) + var(--ih) * var(--v)); left: calc(var(--iw) * var(--u)); font-size: clamp(12.5px, 2.75cqh, 18.5px); }
+  .grows-say-rabbit { --u: 0.3; --v: 0.385; translate: -50% 0; }
+  .grows-say-child { --u: 0.122; --v: 0.28; }
+  .grows-veil { display: block; position: absolute; inset: 0; background: radial-gradient(58% 70% at 78% 34%, rgb(253 249 236 / 0.66), rgb(253 249 236 / 0.4) 48%, rgb(253 249 236 / 0) 82%); }
+  .grows-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+    align-content: start;
+    gap: 0 clamp(40px, 5vw, 76px);
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: clamp(92px, 12.5vh, 124px) clamp(36px, 4.4vw, 64px) 28px;
+    pointer-events: none; /* only the writing takes the pointer, not the empty column over the painting */
+  }
+  .grows-copy { grid-column: 2; pointer-events: auto; }
+  .grows-title span { display: block; }
+}
+@media (min-width: 1000px) and (max-height: 740px) {
+  .grows-inner { padding-top: 84px; padding-bottom: 20px; }
+  .grows-eyebrow { margin-bottom: 14px; }
+  .grows-lede { margin-top: 12px; }
+  .grows-points { margin-top: 16px; }
+  .grows-points li { padding: 8px 0 9px; }
+  .grows-more { margin-top: 14px; }
+}
+@media (min-width: 1400px) {
+  .grows-points h3 { font-size: 20px; }
+  .grows-points p { font-size: 15px; }
+}
+
+/* Pinned (main.js, initGrows). The why section is made longer by --grows-hold
+   and its panel sticks for that long; this section starts where the why
+   section does, so its own sticking panel lies exactly on the why panel, and
+   goes on for --grows-track. All four lengths are px, set by main.js; the
+   hold and the track both include GROWS.lead, the still moment at the start. */
+.why.is-handing { height: calc(var(--grows-h) + var(--grows-hold)); background: var(--w-paper); }
+.why.is-handing .why-stage { position: sticky; top: var(--grows-top); }
+.why.is-covered .why-stage { opacity: 0; } /* the night of the grows panel is over it (initGrows). Opacity, not visibility: the birds set their own visibility */
+.why.is-starless .why-eyebrow-mark svg { visibility: hidden; } /* the star is loose, as the wordmark's spark is while the firefly flies */
+.grows.is-pinned {
+  height: calc(var(--grows-h) + var(--grows-track));
+  margin-top: calc(-1 * (var(--grows-h) + var(--grows-hold)));
+  /* clear over the why section, paper once that has scrolled away under the panel */
+  background: linear-gradient(to bottom, transparent calc(var(--grows-h) + var(--grows-hold)), var(--g-paper) 0);
+}
+.grows.is-pinned .grows-stage { position: sticky; top: var(--grows-top); height: var(--grows-h); background: none; pointer-events: none; }
+.grows.is-pinned .grows-stage.is-live { pointer-events: auto; }
+.grows.is-pinned .grows-panel { height: 100%; min-height: 0; }
+/* The night: the why panel's own ground (change the two together), with the
+   stars, the clouds and the writing in the night's ink. */
+.grows.is-pinned .grows-night {
+  position: absolute;
+  inset: 0;
+  z-index: 0; /* a layer of its own: its copy of the writing must stay under the painting */
+  display: grid;
+  overflow: hidden;
+  border-radius: inherit;
+  opacity: 0;
+  background:
+    radial-gradient(70% 90% at 12% 0%, rgb(92 116 196 / 0.2), rgb(92 116 196 / 0) 62%),
+    radial-gradient(60% 70% at 100% 100%, rgb(233 182 56 / 0.06), rgb(233 182 56 / 0) 66%),
+    linear-gradient(165deg, #1b2444 0%, #131a31 62%, #0f1529 100%);
+}
+.grows-night .grows-inner { --g-ink: #f6f0e3; --g-muted: rgb(246 240 227 / 0.64); --g-line: rgb(246 240 227 / 0.13); color: var(--g-ink); }
+.grows-night .grows-eyebrow-mark { background: rgb(233 182 56 / 0.14); box-shadow: inset 0 0 0 1px rgb(233 182 56 / 0.34); }
+.grows-stars, .grows-clouds { position: absolute; inset: 0; }
+.grows-star { position: absolute; border-radius: 50%; background: #fff6d8; animation: grows-twinkle var(--t, 3s) ease-in-out var(--dl, 0s) infinite; }
+svg.grows-star { overflow: visible; border-radius: 0; background: none; fill: #f3d27a; }
+@keyframes grows-twinkle {
+  0%, 100% { opacity: var(--lo, 0.25); transform: scale(0.8); }
+  40% { opacity: 1; transform: scale(1.15); }
+  62% { opacity: 0.5; transform: scale(0.9); }
+  78% { opacity: 0.95; transform: scale(1.05); }
+}
+/* The app's day clouds, turned to night: screened onto the dark and dimmed. */
+.grows-cloud { position: absolute; top: 0; left: 0; opacity: 0; mix-blend-mode: screen; filter: brightness(0.5) saturate(0.7) hue-rotate(-12deg); will-change: transform, opacity; }
+.grows-cloud img { display: block; width: 100%; height: auto; animation: grows-drift var(--t, 16s) ease-in-out var(--dl, 0s) infinite alternate; }
+@keyframes grows-drift { from { transform: translateX(-7px); } to { transform: translateX(7px); } }
+/* The light: everything in .grows-world shows only inside the circle. */
+.grows.is-pinned .grows-world {
+  -webkit-mask-image: radial-gradient(circle at var(--cx, 50%) var(--cy, 50%), #000 calc(var(--r, 0px) - 12px), transparent var(--r, 0px));
+  mask-image: radial-gradient(circle at var(--cx, 50%) var(--cy, 50%), #000 calc(var(--r, 0px) - 12px), transparent var(--r, 0px));
+}
+.grows.is-pinned .grows-world.is-full { -webkit-mask-image: none; mask-image: none; }
+.grows.is-pinned .grows-painting { inset: auto; object-fit: fill; will-change: transform; }
+.grows.is-pinned .grows-rim {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: 0 0 46px 10px rgb(255 226 150 / 0.5), 0 0 140px 40px rgb(255 214 120 / 0.16), inset 0 0 34px 4px rgb(255 244 208 / 0.6);
+}
+/* The star, at the size it has beside "The note" (main.js scales it up as it
+   flies), its two glows, and the thread of light behind it. */
+.grows.is-pinned .grows-trail { display: block; position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.grows-trail path { fill: none; stroke: rgb(255 226 150 / 0.75); stroke-width: 2.2; stroke-linecap: round; filter: blur(1.2px); }
+.grows.is-pinned .grows-fly { display: block; position: absolute; z-index: 3; top: 0; left: 0; width: 0; height: 0; visibility: hidden; pointer-events: none; will-change: transform; }
+.grows-fly svg { position: absolute; top: -6px; left: -4.5px; width: 9px; height: 12px; overflow: visible; fill: var(--color-gold); filter: drop-shadow(0 0 2px rgb(255 222 120 / 0.9)); }
+.grows-fly-glow, .grows-fly-aura { position: absolute; border-radius: 50%; }
+.grows-fly-glow { top: -27px; left: -27px; width: 54px; height: 54px; background: radial-gradient(closest-side, rgb(255 244 196 / 0.75), rgb(255 221 120 / 0.32) 34%, rgb(255 206 90 / 0.08) 62%, rgb(255 206 90 / 0)); animation: grows-flicker 3.1s ease-in-out infinite; }
+.grows-fly-aura { top: -73px; left: -73px; width: 146px; height: 146px; background: radial-gradient(closest-side, rgb(255 226 150 / 0.22), rgb(255 214 120 / 0.07) 55%, rgb(255 206 90 / 0)); animation: grows-flicker 4.3s ease-in-out infinite reverse; }
+@keyframes grows-flicker {
+  0%, 100% { opacity: 0.7; transform: scale(0.9); }
+  18% { opacity: 1; transform: scale(1.08); }
+  31% { opacity: 0.78; transform: scale(0.96); }
+  47% { opacity: 1; transform: scale(1.12); }
+  70% { opacity: 0.62; transform: scale(0.88); }
+  84% { opacity: 0.95; transform: scale(1.04); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grows *, .grows *::before, .grows *::after { transition: none !important; animation: none !important; }
+}
+
+/* ---------- Waitlist ----------
+   Where "Join the waitlist" in the hero lands, between the grows section and
+   the questions, on the questions' paper so the two are one ground. Centred,
+   as the curriculum's head is: the eyebrow, the heading, one italic sentence,
+   then a single field of white paper holding the address and the hero's ink
+   button, standing in a pool of the spark's gold (.waitlist-glow), and one
+   quiet line under it. At the foot, the heading drawn (.waitlist-place): the
+   three guides round a lantern, and an empty mat between them.
+
+   The markup is the finished still. main.js (initWaitlist) adds .is-waiting
+   while the section is still below the window and swaps it for .is-revealing
+   when the reader gets to it, so it is written in once: the writing, the
+   field, the glow, the line, the painting (--d on each in index.html, in
+   seconds). Reduced motion, no JS and a page reloaded part-way down keep the
+   still.
+
+   The line under the field (.waitlist-under) holds two things in one place:
+   the three facts (.waitlist-fine), and what the form has to say
+   (.waitlist-status), which takes their place while it shows, so nothing
+   under it moves. Once an address is taken, .waitlist-done stands where the
+   form stood, the same card. */
+.waitlist {
+  --l-text: "Geist", var(--font-sans);
+  --l-display: "Newsreader", var(--font-serif);
+  --l-paper: #fbf6f0; /* the questions' paper (--f-paper): change the two together */
+  --l-ink: #1c1a17;
+  --l-muted: rgb(28 26 23 / 0.68);
+  --l-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  z-index: 2;
+  /* One window tall, as the why and grows panels are: on this section
+     nothing of the painting above or the questions below is in the window.
+     At most 940px, the panels' own limit, so a very tall window is not
+     mostly bare paper. Two rows: the writing and the field, in the middle of
+     the room the painting leaves, and the painting standing at the foot. */
+  --lamp: 0; /* how lit the painting's lantern is, 0 to 1: see .waitlist-place */
+  display: grid;
+  grid-template-rows: 1fr auto;
+  align-items: center;
+  min-height: min(100vh, 940px);
+  min-height: min(100svh, 940px);
+  overflow: hidden; /* the glow is wider than a phone */
+  background: var(--l-paper);
+  color: var(--l-ink);
+  font-family: var(--l-text);
+  text-align: center;
+}
+/* The top is what the header's pill takes; under the writing there is only
+   a breath, because the painting follows. A window too short for it all
+   makes the section taller, never the writing tighter. */
+.waitlist-inner { display: grid; justify-items: center; width: 100%; margin: 0 auto; max-width: 1260px; padding: 92px 20px 12px; }
+@media (min-width: 640px) { .waitlist-inner { padding: 96px 40px 8px; } }
+
+/* The writing. */
+.waitlist-head { display: grid; justify-items: center; max-width: 820px; }
+.waitlist-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 20px; color: var(--l-muted); font-size: 12.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; }
+.waitlist-eyebrow-mark, .waitlist-done-mark { display: grid; flex: none; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: rgb(233 182 56 / 0.2); box-shadow: inset 0 0 0 1px rgb(233 182 56 / 0.5); }
+.waitlist-eyebrow-mark svg, .waitlist-done-mark svg { width: 9px; height: 12px; fill: var(--color-gold); }
+.waitlist-title { font-family: var(--font-serif); font-weight: 500; font-size: clamp(40px, 4.9vw, 70px); line-height: 1.04; letter-spacing: -0.025em; text-wrap: balance; }
+.waitlist-lede { max-width: 30em; margin-top: 18px; color: rgb(28 26 23 / 0.75); font-family: var(--font-serif); font-style: italic; font-size: 1.35rem; line-height: 1.45; text-wrap: balance; }
+/* A sentence to a line where there is room, as the curriculum's lede has. */
+.waitlist-lede > span { display: inline; }
+@media (min-width: 760px) { .waitlist-lede > span { display: block; } }
+
+/* The field, and the pool of light it stands in. The light is two boxes: the
+   outer one is what the reveal brings up, the inner one breathes, slowly, as
+   the firefly's glow does. */
+.waitlist-stand { position: relative; width: 100%; max-width: 580px; margin-top: 40px; }
+.waitlist-glow { position: absolute; top: 50%; left: 50%; width: min(920px, 190%); height: 320px; translate: -50% -50%; pointer-events: none; }
+.waitlist-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(233 182 56 / 0.26), rgb(233 182 56 / 0.1) 46%, rgb(233 182 56 / 0));
+  animation: waitlist-breathe 6.5s ease-in-out infinite;
+}
+@keyframes waitlist-breathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.68; } } /* strength only: a gradient this faint shows rings when its layer is resized */
+
+.waitlist-form, .waitlist-done { position: relative; z-index: 1; }
+.waitlist-field, .waitlist-done {
+  border: 1px solid #fff;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #fff 0%, #fffdf9 100%);
+  box-shadow: 0 0 0 1px rgb(60 50 30 / 0.07), 0 1px 2px rgb(60 50 30 / 0.06), 0 10px 22px -10px rgb(60 50 30 / 0.16), 0 28px 60px -24px rgb(60 50 30 / 0.34);
+}
+.waitlist-field { display: flex; align-items: center; gap: 8px; height: 68px; padding: 0 10px 0 24px; transition: box-shadow 0.3s ease; }
+.waitlist-field:focus-within { box-shadow: 0 0 0 1px rgb(233 182 56 / 0.7), 0 0 0 5px rgb(233 182 56 / 0.2), 0 10px 22px -10px rgb(60 50 30 / 0.16), 0 28px 60px -24px rgb(60 50 30 / 0.34); }
+.waitlist-field.is-error { animation: url-shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
+.waitlist-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.waitlist-input { flex: 1 1 0%; width: 100%; min-width: 0; height: 100%; color: var(--l-ink); font-size: 17px; letter-spacing: -0.011em; outline: none; -webkit-appearance: none; appearance: none; }
+.waitlist-input::placeholder { color: rgb(28 26 23 / 0.36); }
+.waitlist-input::selection { background: #e9b63840; }
+/* A browser's filled-in address keeps the field's own paper and ink. */
+.waitlist-input:-webkit-autofill { -webkit-text-fill-color: var(--l-ink); box-shadow: inset 0 0 0 100px #fffefb; }
+.waitlist-go:focus-visible { box-shadow: 0 2px 8px rgba(26, 26, 26, 0.18), 0 0 0 4px rgba(233, 182, 56, 0.45); }
+.waitlist-go[disabled] { transform: none; filter: none; opacity: 0.72; cursor: default; }
+.waitlist-go[disabled]::after { animation: none; opacity: 0; }
+
+/* In the form's place once an address is taken. */
+.waitlist-done { display: flex; align-items: center; justify-content: center; gap: 14px; min-height: 68px; padding: 10px 24px; outline: none; text-align: left; animation: waitlist-done 0.8s var(--l-ease) both; }
+.waitlist-done[hidden], .waitlist-form[hidden] { display: none; }
+.waitlist-done p { color: var(--l-muted); font-size: 14.5px; line-height: 1.4; }
+.waitlist-done strong { display: block; color: var(--l-ink); font-family: var(--l-display); font-size: 19px; font-weight: 400; line-height: 1.3; letter-spacing: -0.012em; }
+.waitlist-done b { color: var(--l-ink); font-weight: 500; overflow-wrap: anywhere; }
+@keyframes waitlist-done { from { opacity: 0; transform: translateY(6px) scale(0.985); } to { opacity: 1; transform: none; } }
+
+/* The line under the field: three facts, or what the form has to say. */
+.waitlist-under { position: relative; z-index: 1; min-height: 20px; margin-top: 22px; color: var(--l-muted); font-size: 13.5px; line-height: 20px; }
+.waitlist-fine > span { white-space: nowrap; }
+.waitlist-fine > span + span::before { content: "·"; margin: 0 0.7em; color: rgb(28 26 23 / 0.38); }
+.waitlist-status { display: block; color: #b3261e; animation: url-error-enter 0.25s ease both; }
+.waitlist-status.is-quiet { color: var(--l-muted); }
+.waitlist-status:empty { display: none; }
+.waitlist.has-status .waitlist-fine { display: none; }
+/* The narrowest phones (320px: an iPhone SE or mini with Display Zoom on):
+   the three facts do not fit on one line, and the spans give the line no
+   place to break, so it held the whole section wider than the window. The
+   third fact goes under the other two. */
+@media (max-width: 359px) {
+  .waitlist-fine > span:last-child { display: block; }
+  .waitlist-fine > span:last-child::before { content: none; }
+}
+
+/* The painting at the foot: the place being kept. Its height follows the
+   window's (36% of it in the two width lines below, between 200 and
+   400px), so the writing and the painting share one window; its width
+   follows from the picture's shape, 1504 by 880.
+
+   The picture is on white and is laid on the paper with multiply, which
+   makes its white the paper, so no cut-out is needed. For that to hold,
+   nothing between .waitlist-art and the section may be a stacking context:
+   .waitlist-place must never take a transform, an opacity, a filter or a
+   z-index. What moves is .waitlist-art itself.
+
+   The lantern. --lamp on the section says how lit it is. 0, the still: it
+   is out (the picture as exported). About three quarters while the reader is in the
+   field or has written in it: the lit glass (.waitlist-art-lit, the master's
+   own paint, over the unlit glass) comes most of the way up and some of its light
+   falls round it (.waitlist-lamp, a wash of gold UNDER the picture, so the
+   paint lies over it as it would over a wash). 1 once an address has been
+   taken (.is-lit, from main.js): the glass is the master's, the light is
+   full and breathes, and it catches with one flash (.waitlist-lamp::after).
+   Where the patch and the light sit are shares of the picture, printed by
+   scripts/export-place.py. From 640px the picture stands a little to the
+   right (--shift), which puts the lantern and the mat under the middle of
+   the field; a phone has no room to spare for that. */
+.waitlist-place {
+  --shift: 0%;
+  position: relative;
+  align-self: end;
+  justify-self: center;
+  width: min(100% - 24px, clamp(200px, 36vh, 400px) * 1.709);
+  width: min(100% - 24px, clamp(200px, 36svh, 400px) * 1.709);
+  margin-bottom: clamp(6px, 1.6vh, 28px);
+  pointer-events: none;
+}
+@media (min-width: 640px) { .waitlist-place { --shift: 5.2%; } }
+.waitlist-art { position: relative; left: var(--shift); mix-blend-mode: multiply; }
+.waitlist-art-day { display: block; width: 100%; height: auto; }
+.waitlist-art-lit { position: absolute; left: 38.564%; top: 44.773%; width: 10.106%; height: auto; opacity: var(--lamp); transition: opacity 0.9s ease; }
+.waitlist-lamp { position: absolute; left: calc(43.62% + var(--shift)); top: 52.39%; width: 96%; aspect-ratio: 1.45; translate: -50% -50%; opacity: var(--lamp); transition: opacity 1.4s ease; }
+.waitlist-lamp::before, .waitlist-lamp::after { content: ""; position: absolute; inset: 0; border-radius: 50%; }
+.waitlist-lamp::before { background: radial-gradient(closest-side, rgb(255 196 78 / 0.84), rgb(255 198 84 / 0.54) 24%, rgb(255 201 92 / 0.3) 52%, rgb(255 201 92 / 0.1) 76%, rgb(255 201 92 / 0)); }
+.waitlist-lamp::after { inset: -22%; background: radial-gradient(closest-side, rgb(255 214 120 / 0.9), rgb(255 214 120 / 0.4) 42%, rgb(255 214 120 / 0)); opacity: 0; }
+/* The same light on the paint: over the picture, warming and lifting what
+   stands near the lantern (the faces, the mat). Soft-light, so it cannot
+   wash the paint out. */
+.waitlist-place::after { content: ""; position: absolute; left: calc(43.62% + var(--shift)); top: 55%; width: 78%; aspect-ratio: 1.3; translate: -50% -50%; border-radius: 50%; background: radial-gradient(closest-side, rgb(255 208 96 / 0.95), rgb(255 208 96 / 0.6) 34%, rgb(255 208 96 / 0.2) 68%, rgb(255 208 96 / 0)); mix-blend-mode: soft-light; opacity: var(--lamp); transition: opacity 1.4s ease; }
+.waitlist:not(.is-lit):has(.waitlist-form:focus-within, .waitlist-input:not(:placeholder-shown)) { --lamp: 0.72; } /* :not(.is-lit): the address stays in the hidden form, and this rule would outweigh the next */
+.waitlist.is-lit { --lamp: 1; }
+.waitlist.is-lit .waitlist-lamp::before { animation: waitlist-breathe 6.5s ease-in-out 2s infinite; }
+.waitlist.is-lit .waitlist-lamp::after { animation: waitlist-catch 1.9s ease-out both; }
+@keyframes waitlist-catch { 0% { opacity: 0; } 22% { opacity: 1; } 100% { opacity: 0; } }
+
+/* The plants at the edges, from 1000px wide: the app's own oak branch coming
+   in from the left beside the heading, and a clump of its ferns in the
+   bottom right corner. Opposite corners, so the page is held and not framed.
+   They fill the wide margins a centred column leaves; narrower than 1000px
+   there are no margins to fill.
+
+   Each runs off the window's edge, which is the only edge that may cut
+   them: the branch is turned so it comes in from the side, not through the
+   section's top (a line that is in the middle of the window while the page
+   scrolls), and the ferns' foot fades into the paper (the mask), because
+   the questions' paper goes on under it. Sizes are in vw so the branch
+   keeps clear of the heading, which is sized in vw too. */
+.waitlist-plants { display: none; }
+@media (min-width: 1000px) {
+  .waitlist-plants { display: block; position: absolute; inset: 0; pointer-events: none; }
+  .waitlist-plant { position: absolute; height: auto; }
+  .waitlist-branch { top: 17%; left: 0; width: clamp(280px, 27vw, 430px); translate: -22% 0; rotate: -24deg; transform-origin: 0 0; }
+  .waitlist-fern { right: 0; bottom: 0; width: clamp(200px, 20vw, 310px); translate: 12% 0; -webkit-mask-image: linear-gradient(to top, transparent, #000 34%); mask-image: linear-gradient(to top, transparent, #000 34%); }
+}
+
+/* A phone: the button under the address, both the width of the card. */
+@media (max-width: 519px) {
+  .waitlist-stand { margin-top: 32px; }
+  .waitlist-field { flex-direction: column; align-items: stretch; gap: 0; height: auto; padding: 6px; }
+  .waitlist-input { flex: none; height: 54px; padding: 0 16px; font-size: 16px; } /* 16px, so an iPhone does not zoom in on it */
+  .waitlist-go { width: 100%; height: 52px; font-size: 16px; }
+  .waitlist-done { justify-content: flex-start; padding: 16px 18px; }
+}
+
+/* The reveal. .is-waiting hides with no transition (so it is instant);
+   .is-revealing carries the transitions, so taking .is-waiting off with it
+   in place writes the section in. */
+.waitlist.is-waiting :is(.waitlist-eyebrow, .waitlist-title, .waitlist-lede, .waitlist-under) { opacity: 0; transform: translateY(16px); filter: blur(6px); }
+.waitlist.is-waiting .waitlist-stand { opacity: 0; transform: translateY(26px) scale(0.985); }
+.waitlist.is-waiting .waitlist-glow { opacity: 0; scale: 0.55; }
+.waitlist.is-waiting .waitlist-art { opacity: 0; transform: translateY(20px); }
+.waitlist.is-waiting .waitlist-plant { opacity: 0; }
+.waitlist.is-revealing .waitlist-plant { transition: opacity 1.4s ease calc(var(--d, 0) * 1s); }
+.waitlist.is-revealing .waitlist-art { transition: opacity 1.1s ease calc(var(--d, 0) * 1s), transform 1.3s var(--l-ease) calc(var(--d, 0) * 1s); }
+.waitlist.is-revealing :is(.waitlist-eyebrow, .waitlist-title, .waitlist-lede, .waitlist-under) { transition: opacity 0.8s ease calc(var(--d, 0) * 1s), transform 1s var(--l-ease) calc(var(--d, 0) * 1s), filter 0.8s ease calc(var(--d, 0) * 1s); }
+.waitlist.is-revealing .waitlist-stand { transition: opacity 0.8s ease calc(var(--d, 0) * 1s), transform 1.1s var(--l-ease) calc(var(--d, 0) * 1s); }
+.waitlist.is-revealing .waitlist-glow { transition: opacity 1.5s ease 0.55s, scale 2.2s var(--l-ease) 0.55s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .waitlist *, .waitlist *::before, .waitlist *::after { transition: none !important; animation: none !important; }
+}
+
+/* ---------- Questions ----------
+   The questions a parent asks before signing up, under the waitlist and
+   on the curriculum section's paper. From 1000px it is two columns: the
+   heading on the left, which stays in the window while the questions scroll
+   past on the right; narrower it is one column. The questions are the why and
+   grows sections' lines again (a line between hairlines), but these do open,
+   so each carries a mark that says so: a plus in a ring, which turns to a
+   minus in the eyebrow's gold when its answer is showing.
+
+   Each question is a <details>, so it opens with no JS. main.js (initFaq)
+   eases the height and adds .is-closing while an answer shuts, so the mark
+   turns back as the answer starts to go and not when it has gone. Reduced
+   motion and no JS get the browser's own toggle. */
+.faq {
+  --f-text: "Geist", var(--font-sans);
+  --f-display: "Newsreader", var(--font-serif);
+  --f-paper: #fbf6f0; /* the curriculum section's paper */
+  --f-ink: #1c1a17;
+  --f-muted: rgb(28 26 23 / 0.68);
+  --f-line: rgb(28 26 23 / 0.13);
+  --f-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  z-index: 2;
+  background: var(--f-paper);
+  color: var(--f-ink);
+  font-family: var(--f-text);
+}
+.faq-inner { display: grid; gap: 40px; margin: 0 auto; max-width: 1260px; padding: 64px 20px 88px; }
+@media (min-width: 640px) { .faq-inner { gap: 52px; padding: clamp(84px, 8vw, 124px) 40px 128px; } }
+
+/* The writing. */
+.faq-eyebrow { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 20px; color: var(--f-muted); font-size: 12.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; }
+.faq-eyebrow-mark { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: rgb(233 182 56 / 0.2); box-shadow: inset 0 0 0 1px rgb(233 182 56 / 0.5); }
+.faq-eyebrow-mark svg { width: 9px; height: 12px; fill: var(--color-gold); }
+.faq-title { font-family: var(--font-serif); font-weight: 500; font-size: clamp(38px, 4.3vw, 64px); line-height: 1.04; letter-spacing: -0.025em; text-wrap: balance; }
+.faq-lede { max-width: 21em; margin-top: 18px; color: rgb(28 26 23 / 0.75); font-family: var(--font-serif); font-style: italic; font-size: 1.35rem; line-height: 1.45; text-wrap: pretty; }
+.faq-ask { display: flex; align-items: center; gap: 12px; margin-top: 28px; color: var(--f-muted); font-size: 14.5px; line-height: 1.45; }
+.faq-ask a { color: var(--f-ink); font-weight: 500; text-decoration: underline; text-decoration-color: rgb(28 26 23 / 0.3); text-underline-offset: 3px; }
+.faq-ask a:hover { text-decoration-color: currentColor; }
+/* The three guides, as on the curriculum's switch, overlapping. */
+.faq-faces { display: flex; flex: none; }
+.faq-faces img { width: 30px; height: 30px; border-radius: 50%; background: #f1eee6; box-shadow: 0 0 0 2px var(--f-paper); }
+.faq-faces img + img { margin-left: -8px; }
+
+/* The questions, in four groups. */
+.faq-groups { display: grid; gap: 40px; min-width: 0; }
+.faq-group-title { margin-bottom: 12px; color: var(--f-muted); font-size: 12.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; }
+.faq-item { border-top: 1px solid var(--f-line); }
+.faq-item:last-child { border-bottom: 1px solid var(--f-line); }
+.faq-item summary { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 20px; padding: 17px 0; cursor: pointer; list-style: none; -webkit-tap-highlight-color: transparent; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary:focus-visible { outline: 2px solid var(--f-ink); outline-offset: 4px; border-radius: 6px; }
+.faq-q { font-family: var(--f-display); font-size: 19px; line-height: 1.3; letter-spacing: -0.012em; text-wrap: balance; }
+/* The mark: a plus in a ring. Its upright stroke lies down when the answer
+   is showing, and the ring takes the eyebrow's gold. */
+.faq-mark { position: relative; width: 30px; height: 30px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgb(28 26 23 / 0.17); transition: background-color 0.35s ease, box-shadow 0.35s ease; }
+.faq-mark::before, .faq-mark::after { content: ""; position: absolute; top: 50%; left: 50%; width: 11px; height: 1.5px; margin: -0.75px 0 0 -5.5px; border-radius: 1px; background: currentColor; transition: transform 0.5s var(--f-ease); }
+.faq-mark::after { transform: rotate(90deg); }
+@media (hover: hover) { .faq-item summary:hover .faq-mark { box-shadow: inset 0 0 0 1px rgb(28 26 23 / 0.42); } }
+.faq-item[open]:not(.is-closing) .faq-mark { background-color: rgb(233 182 56 / 0.22); box-shadow: inset 0 0 0 1px rgb(233 182 56 / 0.6); }
+.faq-item[open]:not(.is-closing) .faq-mark::before { transform: rotate(180deg); }
+.faq-item[open]:not(.is-closing) .faq-mark::after { transform: rotate(180deg); }
+/* The answer. Its first sentence is the answer, in the page's ink; the rest
+   is the reason, a shade quieter. The room under it is the paragraph's, so
+   the box main.js eases has none of its own. */
+.faq-a p { max-width: 39em; padding: 0 50px 22px 0; color: var(--f-muted); font-size: 15.5px; line-height: 1.6; text-wrap: pretty; }
+.faq-a strong { color: var(--f-ink); font-weight: 500; }
+@media (max-width: 559px) { .faq-a p { padding-right: 8px; } } /* a phone has no room to keep the answer clear of the mark's column */
+
+@media (min-width: 1000px) {
+  .faq-inner { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); align-items: start; gap: clamp(56px, 8vw, 128px); }
+  /* The heading stays in the window while the questions scroll; the top is the room the header's pill takes. */
+  .faq-head { position: sticky; top: 124px; }
+  .faq-title span { display: block; }
+  .faq-groups { gap: 48px; padding-top: 5px; } /* the first group's label level with the eyebrow */
+  .faq-item summary { padding: 19px 0; }
+  .faq-q { font-size: 20.5px; }
+}
+@media (min-width: 1400px) {
+  .faq-q { font-size: 21.5px; }
+  .faq-a p { font-size: 16px; }
+}
+
+/* The way in, once (main.js, initFaqReveal). .is-waiting hides with no
+   transition, so it is instant; .is-revealing carries the transitions, each
+   piece held back by its --d (set from how far down it sits). No blur. */
+.faq.is-waiting [data-reveal] { opacity: 0; transform: translateY(12px); }
+.faq.is-revealing [data-reveal] {
+  transition: opacity 0.9s ease-out, transform 1.1s var(--f-ease);
+  transition-delay: var(--d, 0ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq *, .faq *::before, .faq *::after { transition: none !important; animation: none !important; }
+}
